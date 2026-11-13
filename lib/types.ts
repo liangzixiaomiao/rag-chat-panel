@@ -28,6 +28,7 @@ export interface Retrieved {
   fullContext: string;
   headingPath: string | null;
   pageFrom: number;
+  pageTo: number | null;
   parentIndex: number;
   similarity: number;
 }

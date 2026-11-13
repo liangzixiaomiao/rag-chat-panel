@@ -28,6 +28,7 @@ interface KnnRow {
   fullContext: string;
   headingPath: string | null;
   pageFrom: number;
+  pageTo: number | null;
   parentIndex: number;
   distance: number;
 }
@@ -40,6 +41,7 @@ select c.id            as chunkId,
        c.full_context  as fullContext,
        c.heading_path  as headingPath,
        c.page_from     as pageFrom,
+       c.page_to       as pageTo,
        c.parent_index  as parentIndex,
        knn.distance    as distance
 from (
@@ -82,6 +84,7 @@ export async function retrieve(params: RetrieveParams): Promise<RetrieveResult> 
       fullContext: row.fullContext,
       headingPath: row.headingPath,
       pageFrom: row.pageFrom,
+      pageTo: row.pageTo,
       parentIndex: row.parentIndex,
       similarity: 1 - row.distance,
     }))

@@ -1,0 +1,1288 @@
+{
+  "set": "m1",
+  "generatedAt": "2026-11-13T18:32:27.116Z",
+  "baseUrl": "http://localhost:3000",
+  "documentId": null,
+  "params": {
+    "chunkSize": 400,
+    "parentMaxChars": 1000,
+    "topK": 5,
+    "rerank": false
+  },
+  "metrics": {
+    "total": 30,
+    "evaluated": 30,
+    "skipped": 0,
+    "errors": 0,
+    "recall": {
+      "hit": 21,
+      "total": 25,
+      "value": 0.84
+    },
+    "citationAccuracy": {
+      "valid": 71,
+      "total": 71,
+      "value": 1
+    },
+    "refusal": {
+      "hit": 5,
+      "total": 5,
+      "value": 1
+    },
+    "firstTokenMs": {
+      "avg": 1698,
+      "p95": 2134,
+      "max": 3808,
+      "threshold": 60000,
+      "pass": true
+    }
+  },
+  "comparison": {
+    "previousReport": "report-20261113T182646.json",
+    "changedParams": [],
+    "warnings": [],
+    "previousRecall": 0.84,
+    "currentRecall": 0.84,
+    "regressions": []
+  },
+  "questions": [
+    {
+      "id": 1,
+      "question": "数组名出现在表达式里会发生什么类型转换？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "9:c0"
+      ],
+      "note": "test.pdf 的 9:c0 说明数组名可隐式转换为指向首元素的指针。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "9:c0",
+        "11:c0",
+        "12:c0",
+        "14:c1",
+        "2:c0"
+      ],
+      "firstTokenMs": 3808,
+      "answer": "数组名出现在表达式中时，可以隐式类型转换为指向数组首元素的指针 [1][2]。\n\n具体来说：\n- int 型数组名可以看作指向数组首元素的 int* 型指针，因此数组名可以参与指针运算，也可以赋值给同类型的指针变量 [1]。\n- 例如 `float a[10]; float *p = a;` 后，p 指向数组 a 的第一个元素 [1]。\n- 需要注意，数组名是右值，不能对它赋值或改变它的值，如 `a = p + 1;` 和 `a++;` 都会导致编译错误 [1]。\n\n另外，资料也强调数组和指针是完全不同的数据类型：例如 `int a[10]` 真正的数据类型是数组类型 int [10]，拥有连续 10 个 int 型数据的内存空间；只是数组名作为表达式时可以隐式类型转换为指向数组首元素的指针 [2]。\n\n对于二维数组，按隐式类型转换规则，数组名 a 作为表达式可以看作指向首元素的指针，而二维数组的元素为一维数组，因此 a 作为表达式具有数组指针类型 int (*)[5]（以 int a[4][5] 为例）[4]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "数组名出现在表达式中， 可以隐式类型转换为指向数组首元素的指针。",
+          "pageFrom": 6,
+          "headingPath": "1. 数组名出现在表达式中， 可以隐式类型转换为指向数组首元素的指针。",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "例如 int 型数组名可以看作指向数组首元素的 int*型指针，因此数组名可以参与指针运算，可以赋值给同类型的指针变量。",
+          "pageFrom": 6,
+          "headingPath": "1. 数组名出现在表达式中， 可以隐式类型转换为指向数组首元素的指针。",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "注意，数组名是右值，不能对它赋值或改变它的值，如：float a[10]; float *p = a; // p 指向数组 a 的第一个元素p++; // p 指向数组 a 的第二个元素a = p + 1; // 编译错误：数组名不能被赋值a++; // 编译错误：数组名是右值，不能用于++运算",
+          "pageFrom": 6,
+          "headingPath": "1. 数组名出现在表达式中， 可以隐式类型转换为指向数组首元素的指针。",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 2,
+          "quote": "例如 int a[10]， a 真正的数据类型是数组类型 int [10]（元素类型为int，数组长度为 10），拥有连续 10 个 int 型数据的内存空间。",
+          "pageFrom": 10,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2 数组类型与数组指针",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 2,
+          "quote": "数组类型的变量作为表达式，即数组名作为表达式，可以隐式类型转换为指向数组首元素的指针，从而参与指针运算或赋值给同类型指针变量。",
+          "pageFrom": 10,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2 数组类型与数组指针",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 4,
+          "quote": "按照隐式类型转换规则，数组名 a 作为表达式可以看作指向首元素的指针，而二维数组的元素为一维数组，因此 a 作为表达式具有数组指针类型int (*)[5]。",
+          "pageFrom": 16,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3 多维数组与数组指针",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 6,
+      "citationsTotal": 6,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 2,
+      "question": "数组指针变量怎么定义？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "12:c1"
+      ],
+      "note": "test.pdf 的 12:c1 给出数组指针变量的定义语法。",
+      "status": "ok",
+      "recallHit": false,
+      "topKeys": [
+        "1:c0",
+        "5:c0",
+        "13:c0",
+        "25:c0",
+        "10:c0"
+      ],
+      "firstTokenMs": 1234,
+      "answer": "数组指针变量的定义形式为：`<类型> (*<变量名>)[<元素个数>];` [6]\n\n资料中给出的定义示例包括：`int (*pa)[5] = &a;`、`float (*pb)[20] = &b;`、`char (*pc)[30] = &c;`，分别指向数组 a、b、c，而不是指向数组的第一个元素 [6]。",
+      "citations": [
+        {
+          "refId": 6,
+          "quote": "数组指针变量的定义如下：<类型> (*<变量名>)[<元素个数>];",
+          "pageFrom": 11,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 6,
+          "quote": "int (*pa)[5] = &a; float (*pb)[20] = &b; char (*pc)[30] = &c;定义了三个数组指针 pa, pb, pc，类型分别为int (*)[10], float (*)[20] 和 char(*)[30]，分别指向数组a, b, c，而不是指向数组的第一个元素。",
+          "pageFrom": 11,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 2,
+      "citationsTotal": 2,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 3,
+      "question": "二维数组作为函数参数时，行数和列数哪个必须指定？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "16:c2"
+      ],
+      "note": "test.pdf 的 16:c2 说明行数可省略、列数必须指定。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "16:c2",
+        "14:c1",
+        "14:c0",
+        "27:c1",
+        "26:c0"
+      ],
+      "firstTokenMs": 1621,
+      "answer": "二维数组作为函数参数时，**列数必须指定，行数可以不指定**。\n\n依据如下：\n\n- 资料指出：“注意上述函数声明中 a 的行数 4 可以不用指定（编译器会忽略），但列数 5 必须要指定” [1]。\n- 资料解释了原因：“形式参数 a 的本质是一个指向 int [5]类型的数组指针，这就是为什么列数不能省略的原因，因为数组指针需要数组长度这个信息” [1]。\n- 资料给出的等价写法包括 `void F(int a[4][5]);`、`void F(int a[][5]);`、`void F(int (*a)[5]);` [1]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "注意上述函数声明中 a 的行数 4 可以不用指定（编译器会忽略），但列数 5 必须要指定",
+          "pageFrom": 20,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.1 二维数组的深入理解…",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "形式参数 a 的本质是一个指向 int [5]类型的数组指针，这就是为什么列数不能省略的原因，因为数组指针需要数组长度这个信息",
+          "pageFrom": 20,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.1 二维数组的深入理解…",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "void F(int a[4][5]); void F(int a[][5]); void F(int (*a)[5]);",
+          "pageFrom": 20,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.1 二维数组的深入理解…",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 3,
+      "citationsTotal": 3,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 4,
+      "question": "指针数组的元素类型是什么？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "23:c0"
+      ],
+      "note": "test.pdf 的 23:c0 定义元素类型为指针的数组叫指针数组。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "25:c0",
+        "2:c0",
+        "11:c0",
+        "1:c0",
+        "23:c0"
+      ],
+      "firstTokenMs": 1446,
+      "answer": "指针数组的元素类型是指针 [1][5]。资料中给出的定义是\"指针数组就是元素类型为指针的数组\" [1]，以及\"元素类型为指针的数组称为指针数组\" [5]。例如资料中分别定义了元素类型为 int*、char* 以及 double* 的指针数组 [1]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "指针数组就是元素类型为指针的数组。",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 5,
+          "quote": "元素类型为指针的数组称为指针数组。",
+          "pageFrom": 32,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5 指针数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "例如：分别定义了三个数组，数组元素类型分别是 int*， char* 以及 double*。",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 3,
+      "citationsTotal": 3,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 5,
+      "question": "命令行参数的 argv[0] 指向什么？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "30:c2"
+      ],
+      "note": "test.pdf 的 30:c2 说明 argv[0] 指向程序名。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "30:c2",
+        "31:c0",
+        "6:c0",
+        "27:c2",
+        "30:c3"
+      ],
+      "firstTokenMs": 1524,
+      "answer": "argv[0] 指向命令行上调用程序时输入的程序名（字符串）[1]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "argv[0] 指向命令行上调用程序时输入的程序名（字符串）",
+          "pageFrom": 49,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 1,
+      "citationsTotal": 1,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 6,
+      "question": "函数指针的主要用途是什么？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "33:c1"
+      ],
+      "note": "test.pdf 的 33:c1 说明函数指针用于分离算法流程和具体动作。",
+      "status": "ok",
+      "recallHit": false,
+      "topKeys": [
+        "7:c0",
+        "33:c0",
+        "32:c0",
+        "31:c1",
+        "38:c0"
+      ],
+      "firstTokenMs": 1815,
+      "answer": "函数指针的主要用途是**将算法流程和其中某些具体实施动作分离，设计出通用、可扩展、可重用的计算框架，在计算框架下具体的函数动作由函数指针传递进来** [2]。\n\n资料进一步说明：计算框架是静态的，每一个计算框架的算法是确定的，通常有多个计算框架；而函数指针是动态的，它可以在计算框架调用时指向不同的函数实体来完成具体的动作 [2]。",
+      "citations": [
+        {
+          "refId": 2,
+          "quote": "函数指针的主要用途是将算法流程和其中某些具体实施动作分离，设计出通用、可扩展、可重用的计算框架，在计算框架下具体的函数动作由函数指针传递进来。",
+          "pageFrom": 54,
+          "headingPath": "3. 输入help后按 > 8.7.1 函数指针",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 2,
+          "quote": "计算框架是静态的，每一个计算框架的算法是确定的，通常有多个计算框架；",
+          "pageFrom": 54,
+          "headingPath": "3. 输入help后按 > 8.7.1 函数指针",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 2,
+          "quote": "函数指针是动态的，它可以在计算框架调用时指向不同的函数实体来完成具体的动作。",
+          "pageFrom": 54,
+          "headingPath": "3. 输入help后按 > 8.7.1 函数指针",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 3,
+      "citationsTotal": 3,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 7,
+      "question": "bsearch 的 base 参数可以不是数组首地址吗？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "58:c3"
+      ],
+      "note": "test.pdf 的 58:c3 说明 base 不一定是数组首地址，可以从任意位置开始查找。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "58:c3",
+        "57:c0",
+        "12:c1",
+        "16:c2",
+        "12:c2"
+      ],
+      "firstTokenMs": 1819,
+      "answer": "可以。bsearch 的 base 参数是“指向所要查找的数组的开始地址（不一定是数组的首地址，可以从任意一个位置开始查找）” [1]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "base: 指向所要查找的数组的开始地址（不一定是数组的首地址，可以从任意一个位置开始查找）",
+          "pageFrom": 74,
+          "headingPath": "9.1}, {3.5, 3.0}, {3.0, 7.0}, {3.5, 2.0}};",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 1,
+      "citationsTotal": 1,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 8,
+      "question": "多维数组在内存中是如何存储的？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "21:c0"
+      ],
+      "note": "test.pdf 的 21:c0 说明多维数组本质是连续内存空间。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "21:c0",
+        "14:c1",
+        "3:c0",
+        "21:c1",
+        "27:c1"
+      ],
+      "firstTokenMs": 847,
+      "answer": "多维数组在内存中的存储方式，资料中的说法如下：\n\n**1. 本质是一段连续的内存空间**\n不管多少维的数组，它们的本质都是内存中一段连续的内存空间，元素从数组的起始地址开始连续存放 [1]。二维数组的每一行以及每行的元素，在内存中也是连续存储的 [2]。二维数组中全部元素的空间连续排列 [4]。\n\n**2. 行优先存储规则**\n对于多维数组的下标，C 语言采用\"行优先存储\"（row-major）的规则，即优先存储最右侧下标对应的元素，如 int a[2][3] [1]。\"行优先存储\"的本质是\"最右边的下标变化最快（rightmost subscript varies fastest）\"，即在内存中从起始地址依次遍历数组的每个元素时，相邻元素中越靠右侧的下标变化的速度越快 [1]。与之相对的是\"列优先存储\"（column-major）或\"最左边的下标变化最快\"，Fotran、Matlab 等语言采用\"列优先存储\" [1]。\n\n**3. 下标与偏移量的映射**\n在\"行优先存储\"规则下，一个 M×N 的二维数组元素 a[i][j] 的下标与元素位置偏移量 loc 之间的关系为：loc = i×N + j，即 a[i][j] 元素的存储地址为 &a[0][0]+loc [1]。通过这个公式，可以将二维数组的二维下标转换成相对于数组首地址的线性偏移量（以数组元素为单位），从而直接访问该元素 [1]。\n\n**4. 多维数组可看作数组的数组**\n对于 N 维数组（N>1），可以看成是一个\"一维数组\"，该\"一维数组\"的每个元素是一个 N-1 维数组；对于 N-1 维数组的理解可递归进行，直到数组元素变为单一类型 [2]。例如 int a[4][5] 可以看作一个长度为 4 的数组，这个数组的每个元素又是一个长度为 5 的 int 型数组 [2]。\n\n**5. 与指针数组的区别**\n二维数组中全部元素的空间连续排列；指针数组中，只有各个指针的空间连续排列，其所指的数据元素的存储顺序取决于存储空间的分配方法，并且通常不连续 [4]。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 9,
+      "question": "缓存击穿怎么处理？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "0:c0"
+      ],
+      "note": "检索验收语料的 0:c0 说明加互斥锁的处理方式。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "0:c0",
+        "26:c2",
+        "10:c1",
+        "25:c3",
+        "21:c1"
+      ],
+      "firstTokenMs": 2130,
+      "answer": "缓存击穿的处理方式是加互斥锁，热点 key 过期时只放一个请求回源。[1]",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "缓存击穿的处理方式是加互斥锁，热点 key 过期时只放一个请求回源。",
+          "pageFrom": 1,
+          "headingPath": "第一章 缓存",
+          "documentTitle": "检索验收语料"
+        }
+      ],
+      "citationsValid": 1,
+      "citationsTotal": 1,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 10,
+      "question": "HNSW 是什么？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "1:c0"
+      ],
+      "note": "检索验收语料的 1:c0 说明 HNSW 是近似最近邻索引。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "23:c0",
+        "34:c3",
+        "25:c0",
+        "1:c0",
+        "21:c0"
+      ],
+      "firstTokenMs": 1538,
+      "answer": "知识库里没有找到相关内容。\n\n资料中只有一句“HNSW 是近似最近邻索引” [4]，除此之外没有更多关于 HNSW 的定义或说明。",
+      "citations": [
+        {
+          "refId": 4,
+          "quote": "HNSW 是近似最近邻索引。",
+          "pageFrom": 2,
+          "headingPath": "第二章 索引",
+          "documentTitle": "检索验收语料"
+        }
+      ],
+      "citationsValid": 1,
+      "citationsTotal": 1,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 11,
+      "question": "子块之间是否允许重叠？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "2:c0"
+      ],
+      "note": "检索验收语料的 2:c0 说明子块之间不做重叠。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "2:c0",
+        "0:c0",
+        "4:c0",
+        "12:c2",
+        "21:c0"
+      ],
+      "firstTokenMs": 1659,
+      "answer": "子块之间不允许重叠。资料中明确写道“子块之间不做重叠” [1]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "子块之间不做重叠。",
+          "pageFrom": 3,
+          "headingPath": "第三章 切块",
+          "documentTitle": "检索验收语料"
+        }
+      ],
+      "citationsValid": 1,
+      "citationsTotal": 1,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 12,
+      "question": "embedding 额度超额会怎样？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "3:c0"
+      ],
+      "note": "检索验收语料的 3:c0 说明额度超额会抛 QuotaError。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "3:c0",
+        "59:c1",
+        "60:c0",
+        "0:c0",
+        "4:c0"
+      ],
+      "firstTokenMs": 1844,
+      "answer": "embedding 额度超额会抛出 QuotaError。[1]",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "embedding 额度超额会抛出 QuotaError。",
+          "pageFrom": 4,
+          "headingPath": "第四章 额度",
+          "documentTitle": "检索验收语料"
+        }
+      ],
+      "citationsValid": 1,
+      "citationsTotal": 1,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 13,
+      "question": "入库幂等是按什么判断的？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "4:c0"
+      ],
+      "note": "检索验收语料的 4:c0 说明按 document_id 判断并跳过已存在子块。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "4:c0",
+        "52:c0",
+        "39:c5",
+        "44:c0",
+        "43:c0"
+      ],
+      "firstTokenMs": 1494,
+      "answer": "入库幂等是按 document_id 判断的，跳过已存在的子块 [1]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "入库幂等是按 document_id 判断，跳过已存在的子块。",
+          "pageFrom": 5,
+          "headingPath": "第五章 入库",
+          "documentTitle": "检索验收语料"
+        }
+      ],
+      "citationsValid": 1,
+      "citationsTotal": 1,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 14,
+      "question": "集成电路产业出现了哪些商业模式？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "0:c2"
+      ],
+      "note": "test.docx 的 0:c2 提到 IDM、晶圆代工、Fabless 和 IP 授权。",
+      "status": "ok",
+      "recallHit": false,
+      "topKeys": [
+        "1:c0",
+        "30:c0",
+        "57:c1",
+        "39:c1",
+        "8:c0"
+      ],
+      "firstTokenMs": 1759,
+      "answer": "知识库里没有找到相关内容。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 15,
+      "question": "信息存储的介质经历了哪些演变？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "1:c0"
+      ],
+      "note": "test.docx 的 1:c0 提到穿孔卡片、磁芯存储器、DRAM 和 NAND 闪存。",
+      "status": "ok",
+      "recallHit": false,
+      "topKeys": [
+        "21:c1",
+        "21:c0",
+        "4:c0",
+        "10:c1",
+        "34:c1"
+      ],
+      "firstTokenMs": 1812,
+      "answer": "知识库里没有找到相关内容。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 16,
+      "question": "数组指针和指针数组有什么区别？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "12:c1",
+        "27:c1"
+      ],
+      "note": "12:c1 定义数组指针，27:c1 对比指针数组与二维数组的区别，需要交叉理解。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "1:c0",
+        "2:c0",
+        "27:c1",
+        "11:c0",
+        "5:c0"
+      ],
+      "firstTokenMs": 1956,
+      "answer": "**数组指针**和**指针数组**的区别，资料中主要从“本质是什么”以及“与二维数组的差异”两个角度做了说明：\n\n## 一、本质区别：主语不同\n\n资料明确指出：数组指针的本质是指针，指针数组的本质是数组。\n\n- **数组指针**：本质是指针，指向一个数组（而不是指向数组元素）。数组指针每次加（减）1，意味着指针位置向后（前）移动了整个数组空间的大小，指针值的变动为整个数组内存空间的字节数。[8]\n- **指针数组**：就是元素类型为指针的数组，例如 `int *piArr[10];`、`char *pcArr[20];`、`double *pdArr[40];`。[7]\n\n资料还给出了便于记忆的说明：“数组指针，主语是指针，因此它的本质是指针，是指向一个数组（而不是指向数组元素）。指针数组，主语是数组，因此它的本质是数组。”[8]\n\n## 二、指针数组与二维数组的区别\n\n资料在对比指针数组与二维数组时列出了三点区别 [3]：\n\n1. **每行元素个数**：二维数组每一行中元素的个数在数组定义时明确规定，且每一行大小相同；而指针数组中各个指针所指向的空间的长度不一定相同。[3]\n2. **空间分配方式**：指针数组为指针分配空间，其所指向的数据元素所需要的存储空间是通过其他方式另行分配的。[3]\n3. **存储连续性**：二维数组中全部元素的空间连续排列；指针数组中，只有各个指针的空间连续排列，其所指的数据元素的存储顺序取决于存储空间的分配方法，并且通常不连续。[3]\n\n## 三、补充说明\n\n资料提到数组名和指针在使用上很相似，“尤其是数组名出现在表达式中几乎可以等同于指针来使用，但数组和指针却是完全不同的数据类型”，例如 `int a[10]` 的真正数据类型是数组类型 `int [10]`。[4]\n\n需要说明的是：资料中“数组指针”与“指针数组”的直接对比主要集中在上述“本质/主语”的区分 [8]，以及指针数组与二维数组的对比 [3]；关于数组指针本身的详细定义，资料中可见于数组指针的内存占用示例等内容 [8]。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 17,
+      "question": "函数指针和 qsort 的比较函数是什么关系？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "32:c0",
+        "39:c0"
+      ],
+      "note": "32:c0 给出函数指针定义，39:c0 给出 qsort 的比较函数参数。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "39:c5",
+        "44:c0",
+        "39:c0",
+        "48:c1",
+        "57:c1"
+      ],
+      "firstTokenMs": 1730,
+      "answer": "函数指针和 qsort 的比较函数之间是\"框架调用—具体动作\"的关系：qsort 是计算框架，比较函数通过函数指针传入，由 qsort 在内部调用。\n\n**1. qsort 的比较函数参数本身就是一个函数指针**\n\nqsort 的原型中，最后一个参数 `int (*cmp)(const void *e1, const void *e2)` 就是指向比较函数的指针 [1]。qsort 负责框架调用和给 `(*cmp)` 传递所需参数，根据 `(*cmp)` 的返回值决定如何移动数组（排序）；而 `(*cmp)` 负责比较两个元素，返回负数、正数和 0，分别表示第一个参数先于、后于和等于第二个参数 [1]。\n\n**2. 这种设计的意义：算法流程与具体动作分离**\n\n函数指针的主要用途是将算法流程和其中某些具体实施动作分离，设计出通用、可扩展、可重用的计算框架，在计算框架下具体的函数动作由函数指针传递进来；计算框架是静态的，函数指针是动态的，它可以在计算框架调用时指向不同的函数实体来完成具体的动作 [6]。排序算法正是这样的例子：每种排序算法逻辑固定，是一个计算框架，但排序对象的类型有多种，只要给出顺序的定义，就可以对任意类型的数据进行排序 [6]。\n\n**3. 实际用法：把比较函数名传给 qsort**\n\n通过将函数名赋值给函数指针，让函数指针指向某个具体的函数，就可以通过函数指针间接调用它 [6]。例如对一维 double 数组排序时，升序调用 `qsort(a, N_ITEMS, sizeof(double), rise_double)`，降序调用 `qsort(a, N_ITEMS, sizeof(double), fall_double)` [1]。点集排序中则调用 `qsort(pt, N, 2 * sizeof(double), x_ascending)` 和 `qsort(pt, N, 2 * sizeof(double), y_descending)` [2]。\n\n**4. 比较函数的写法要与 qsort 框架的类型一致**\n\n比较函数的参数为通用类型指针 `const void*`，在函数内部需要进行强制类型转换，这样跟 qsort 框架内的函数原型格式一致 [3]。资料也提到，`fall_double` 那种把参数直接写成 `const double *` 的用法有的编译器可能会 warning，最好都按 `rise_double` 函数那样使用 `const void *`，跟框架 qsort 里类型一致 [1]。\n\n**5. 一个需要注意的分歧点**\n\n资料明确指出：qsort() 快速排序函数（标准库函数）的 cmp 函数返回值含义，与例 8-12 通用冒泡排序函数中 cmp 函数的返回值含义的约定不同 [1]。也就是说，虽然两者都通过函数指针接收比较函数，但返回值的约定并不一致，使用时不能混用。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 18,
+      "question": "多维数组的行优先存储和下标偏移量有什么关系？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "21:c0",
+        "21:c1"
+      ],
+      "note": "21:c0 讲偏移量映射，21:c1 讲最右侧下标变化最快的行优先本质。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "21:c0",
+        "21:c1",
+        "3:c0",
+        "25:c3",
+        "52:c0"
+      ],
+      "firstTokenMs": 1809,
+      "answer": "根据资料，多维数组采用“行优先存储”（row-major）规则，即优先存储最右侧下标对应的元素，本质是“最右边的下标变化最快（rightmost subscript varies fastest）”[1]。\n\n在行优先存储规则下，一个 M×N 的二维数组元素 a[i][j] 的下标与元素位置偏移量 loc 之间的关系为：**loc = i×N + j**，即 a[i][j] 元素的存储地址为 &a[0][0]+loc。通过这个公式，可以将二维数组的二维下标转换成相对于数组首地址的线性偏移量（以数组元素为单位），从而直接访问该元素[1]。\n\n资料还指出，不管多少维的数组，本质都是内存中一段连续的内存空间，元素从数组的起始地址开始连续存放；多维数组元素的下标与该元素的存储位置（以数组元素为单位相对数组起始地址的偏移量）之间存在一个关系映射。对于一维数组很简单，下标即为偏移量[1]。\n\n作为对比，资料提到“列优先存储”（column-major）或“最左边的下标变化最快（leftmost subscript varies fastest）”，Fotran、Matlab 等语言采用“列优先存储”[1]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "不管多少维的数组， 它们的本质都是内存中一段连续的内存空间，元素从数组的起始地址开始连续存放。多维数组元素的下标与该元素的存储位置（以数组元素为单位相对数组起始地址的偏移量）之间存在一个关系映射。",
+          "pageFrom": 26,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.3 高维数组的深入理解",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "对于一维数组很简单，下标即为偏移量。对于多维数组的下标， C 语言采用“行优先存储”（row-major）的规则，即优先存储最右侧下标对应的元素",
+          "pageFrom": 26,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.3 高维数组的深入理解",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "在“行优先存储”规则下，一个 M×N 的二维数组元素 a[i][ j] 的下标与元素位置偏移量 loc 之间的关系为： loc = i×N + j即 a[i][ j] 元素的存储地址为 &a[0][0]+loc。通过上面的公式，可以将二维数组的二维下标转换成相对于数组首地址的线性偏移量（以数组元素为单位），从而直接访问该元素。",
+          "pageFrom": 26,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.3 高维数组的深入理解",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "“行优先存储” 的本质其实是“最右边的下标变化最快（rightmost subscriptvaries fastest）”",
+          "pageFrom": 26,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.3 高维数组的深入理解",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "与之相对的是“列优先存储”（column-major）或“最左边的下标变化最快（leftmost subscript varies fastest）”，Fotran， Matlab 等语言采用“列优先存储”。",
+          "pageFrom": 26,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.3 高维数组的深入理解",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 5,
+      "citationsTotal": 5,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 19,
+      "question": "指针数组为什么能提高字符串排序的效率？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "25:c2",
+        "25:c4"
+      ],
+      "note": "25:c2 说明用指针数组做索引避免整行搬移，25:c4 说明原始数据未被改写。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "58:c2",
+        "25:c4",
+        "25:c3",
+        "13:c0",
+        "10:c1"
+      ],
+      "firstTokenMs": 1421,
+      "answer": "根据【资料】，指针数组能提高字符串排序效率，原因主要有以下几点：\n\n**1. 避免直接交换大块数据，改为交换指针**\n\n资料指出，在文字处理程序中，数据一般以“行”为单位保存在二维数组中，对各行位置的交换、整行内容的删除和新行的添加是频繁进行的操作，而这些操作“计算代价很大”。为提高程序运行速度，“往往使用指针数组作为实际数据的索引”[1]。资料中的示意图对比了“直接对二维字符数组排序”（交换数组内容）与“利用指针数组排序”（交换指针）两种方式[1]。\n\n**2. 排序时只对索引/指针排序，原始数据不发生改变**\n\n例8-8（指针数组版）中，程序定义全局数组 `char a[100][1001]` 保存所有行，另定义 `int lens[100]` 和指针数组 `char *lines[100]` 分别保存每行长度和指向该行字符串的指针；对 `lens` 数组进行冒泡排序并同时相应交换 `lines` 中对应的指针。排序结束后 `lines` 依序指向数组 `a` 中从短到长的各个字符串，“但原始数据没有发生改变（没有对数组 a 进行写操作）”[1]。\n\n**3. qsort 版的说明：原始数组元素可能很大，交换内容过多导致效率低下**\n\n例8-14（qsort 版）中说明：“qsort 不一定要对原始数组内容进行排序，因为原始数组的元素可能会很大，内存交换内容过多会导致效率低下。通过对原始数组内容的索引数组进行排序，可以非常有效地提高排序效率。”[2] 该例用全局数组 `int lines[]` 保存每行的行号，对行号数组排序，最后按 `lines` 中的有序行号检索 `array` 输出对应字符串[2]。\n\n**4. 指针数组与二维数组的存储差异（相关背景）**\n\n资料在对比指针数组与二维数组时指出：二维数组中全部元素的空间连续排列；指针数组中只有各个指针的空间连续排列，其所指的数据元素的存储顺序取决于存储空间的分配方法，并且通常不连续[5]。此外，二维数组每一行元素个数在定义时明确规定且每行大小相同，而指针数组中各个指针所指向的空间长度不一定相同[5]。\n\n综上，依据资料，指针数组提高字符串排序效率的核心在于：排序时只移动/交换指针（或行号索引），而不搬移庞大的原始字符串数据，从而减少内存交换开销[1][2]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "为提高程序的运行速度，往往使用指针数组作为实际数据的索引。",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 2,
+          "quote": "qsort 不一定要对原始数组内容进行排序，因为原始数组的元素可能会很大，内存交换内容过多会导致效率低下。 通过对原始数组内容的索引数组进行排序，可以非常有效地提高排序效率。",
+          "pageFrom": 74,
+          "headingPath": "9.1}, {3.5, 3.0}, {3.0, 7.0}, {3.5, 2.0}};",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 5,
+          "quote": "二维数组中全部元素的空间连续排列；指针数组中，只有各个指针的空间连续排列，其所指的数据元素的存储顺序取决于存储空间的分配方法，并且通常不连续。",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 5,
+          "quote": "二维数组每一行中元素的个数在数组定义时明确规定，且每一行大小相同；而指针数组中各个指针所指向的空间的长度不一定相同。",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 6,
+      "citationsTotal": 6,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 20,
+      "question": "数组名和数组指针在加 1 时为什么行为不同？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "11:c0",
+        "12:c2"
+      ],
+      "note": "11:c0 说明数组与指针类型不同，12:c2 对比 a+1 与 &a+1 的步长。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "12:c2",
+        "1:c0",
+        "11:c0",
+        "2:c0",
+        "9:c0"
+      ],
+      "firstTokenMs": 2134,
+      "answer": "数组名和数组指针加 1 时行为不同，原因在于二者的类型不同，加 1 时指针移动的步长不同。\n\n**1. 数组名加 1 的步长是一个元素**\n\n数组名出现在表达式中会隐式类型转换为指向数组首元素的指针 [5]。因此对数组名（或指向首元素的指针）加 1，移动的是**一个元素**的大小。资料中的例子：`a+1` 指向数组 a 的第二个元素 [1]。\n\n**2. 数组指针加 1 的步长是整个数组**\n\n数组指针的本质是指针，但它指向的数据实体是数组类型而非单一类型 [8]。资料明确指出：\"数组指针每次加（减）1，意味着指针位置向后（前）移动了整个数组空间的大小，指针值的变动为整个数组内存空间的字节数\" [8]。资料中的例子：`&a+1` 指向数组 a 最后一个元素之后的位置 [1]；例 8-2 中 `pa+1` 与 `pa` 的差值（按字节）为 20，即整个数组空间的字节数 [8]。\n\n**3. 根源：a 和 &a 值相同但类型不同**\n\n资料指出，a 和 &a 具有相同的值，但却具有不同的类型，\"因为类型不同，加 1 时指针指向的位置也不同\" [1]。数组的地址类型为指向数组的指针（数组指针）[1]，而数组名作为表达式转换为指向首元素的指针 [5]，两者类型不同，故加 1 的偏移量不同。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "a 是一个数组，a 和 &a 具有相同的值，但却具有不同的类型。因为类型不同，加 1 时指针指向的位置也不同：a+1 指向数组 a 的第二个元素；&a+1 指向数组 a 最后一个元素之后的位置。",
+          "pageFrom": 11,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "数组的地址类型为指向数组的指针，简称数组指针",
+          "pageFrom": 11,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 5,
+          "quote": "数组名出现在表达式中， 可以隐式类型转换为指向数组首元素的指针。",
+          "pageFrom": 6,
+          "headingPath": "1. 数组名出现在表达式中， 可以隐式类型转换为指向数组首元素的指针。",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 8,
+          "quote": "数组指针的本质还是指针，只不过它指向的数据实体不是单一类型，而是数组类型。",
+          "pageFrom": 14,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 4,
+      "citationsTotal": 4,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 21,
+      "question": "C 语言的数组指针和检索系统里的 HNSW 索引分别是什么？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "12:c1",
+        "1:c0"
+      ],
+      "note": "跨文档：test.pdf 的 12:c1 定义数组指针，检索验收语料的 1:c0 定义 HNSW。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "23:c0",
+        "1:c0",
+        "25:c0",
+        "61:c0",
+        "12:c1"
+      ],
+      "firstTokenMs": 1746,
+      "answer": "关于数组指针：数组的地址类型为指向数组的指针，简称数组指针，定义形式为 `<类型> (*<变量名>)[<元素个数>]`，例如 `int (*pa)[5] = &a;` [4]。数组指针的本质还是指针，只不过它指向的数据实体不是单一类型，而是数组类型；数组指针每次加（减）1，意味着指针位置向后（前）移动了整个数组空间的大小 [6]。数组指针解地址后代表它所指向的数组变量，可以看作数组名，用作表达式时和数组名一样也可以隐式类型转换为指向数组首元素的指针 [6]。\n\n关于 HNSW 索引：知识库里没有找到相关内容。",
+      "citations": [
+        {
+          "refId": 4,
+          "quote": "数组的地址类型为指向数组的指针，简称数组指针 ，数组指针变量的定义如下：<类型> (*<变量名>)[<元素个数>]; int a[5], *p; float b[20]; char c[30]; p = a; int (*pa)[5] = &a; float (*pb)[20] = &b; char (*pc)[30] = &c;",
+          "pageFrom": 11,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 6,
+          "quote": "数组指针的本质还是指针，只不过它指向的数据实体不是单一类型，而是数组类型。关于指针的所有运算都适用于它。数组指针每次加（减） 1，意味着指针位置向后（前）移动了整个数组空间的大小，指针值的变动为整个数组内存空间的字节数。",
+          "pageFrom": 14,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 6,
+          "quote": "数组指针解地址后，代表它所指向的数组变量，可以看作数组名，用作表达式时和数组名一样也可以隐式类型转换为指向数组首元素的指针 。double d[10] = {0}; double (*pd)[10] = &d; double *p; p = *pd;//隐式变换",
+          "pageFrom": 14,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 3,
+      "citationsTotal": 3,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 22,
+      "question": "检索语料里的子块切分规则和 C 语言数组的连续存储有什么不同？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "2:c0",
+        "21:c0"
+      ],
+      "note": "跨文档：检索验收语料的 2:c0 说子块不重叠，test.pdf 的 21:c0 说数组连续存储。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "39:c5",
+        "25:c4",
+        "14:c3",
+        "21:c0",
+        "27:c1"
+      ],
+      "firstTokenMs": 1686,
+      "answer": "知识库里没有找到关于“检索语料里的子块切分规则”的相关内容，因此无法就这一项与 C 语言数组的连续存储进行对比。\n\n关于 C 语言数组的连续存储，资料中有以下说明：\n\n- 不管多少维的数组，它们的本质都是内存中一段连续的内存空间，元素从数组的起始地址开始连续存放 [2]。\n- 二维数组中全部元素的空间连续排列 [3]。\n- 多维数组的本质是一维数组 [2]。\n\n资料 [8] 只提到“入库幂等是按 document_id 判断，跳过已存在的子块”，并未涉及子块切分规则本身，也没有可与数组连续存储相比较的内容。",
+      "citations": [
+        {
+          "refId": 2,
+          "quote": "不管多少维的数组， 它们的本质都是内存中一段连续的内存空间，元素从数组的起始地址开始连续存放。",
+          "pageFrom": 26,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.3 高维数组的深入理解",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 3,
+          "quote": "二维数组中全部元素的空间连续排列",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 2,
+          "quote": "多维数组的本质是一维数组",
+          "pageFrom": 26,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.3 高维数组的深入理解",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 8,
+          "quote": "入库幂等是按 document_id 判断，跳过已存在的子块。",
+          "pageFrom": 5,
+          "headingPath": "第五章 入库",
+          "documentTitle": "检索验收语料"
+        }
+      ],
+      "citationsValid": 4,
+      "citationsTotal": 4,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 23,
+      "question": "入库幂等和命令行参数的处理分别是怎么做的？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "4:c0",
+        "30:c2"
+      ],
+      "note": "跨文档：检索验收语料的 4:c0 讲按 document_id 幂等，test.pdf 的 30:c2 讲 argv 传参。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "4:c0",
+        "6:c0",
+        "31:c0",
+        "48:c1",
+        "44:c0"
+      ],
+      "firstTokenMs": 1578,
+      "answer": "关于入库幂等：资料中只有一句相关说明——入库幂等是按 document_id 判断，跳过已存在的子块 [1]。\n\n关于命令行参数的处理，资料中的做法如下：\n- argc 表示包含程序名在内的参数个数；argv[0] 指向命令行上调用程序时输入的程序名（字符串）；从 argv[1] 到 argv[argc-1] 分别顺次指向命令行中第 1 个到第 argc-1 个参数（字符串形式）[5]。\n- 遍历参数时下标从 1 开始，因为第一个参数 argv[0] 是应用程序名，第二个参数（下标为 1）开始才是需要处理的参数 [2][5]。\n- 示例程序用 `for (i = 1; i < argc; i++)` 遍历，并用 `sscanf(argv[i], \"%d\", &val)` 将每个参数字符串转换为整数后求和 [2][5]。\n- 另有示例程序用 `printf(\"%s: \", argv[0]);` 先输出程序名，再从下标 1 开始逐个输出参数 [5]。\n\n资料中未提及入库幂等与命令行参数处理之间的其他关联内容。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "入库幂等是按 document_id 判断，跳过已存在的子块。",
+          "pageFrom": 5,
+          "headingPath": "第五章 入库",
+          "documentTitle": "检索验收语料"
+        },
+        {
+          "refId": 5,
+          "quote": "argc 表示包含程序名在内的参数个数。",
+          "pageFrom": 51,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 5,
+          "quote": "argv[0] 指向命令行上调用程序时输入的程序名（字符串）",
+          "pageFrom": 51,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 5,
+          "quote": "从 argv[1] 到 argv[argc-1] 分别顺次指向命令行中第 1 个到第 argc-1 个参数（字符串形式）。",
+          "pageFrom": 51,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 2,
+          "quote": "为什么对 argv的下标遍历是从1开始 ？因为第一个参数 argv[0]是应用程序名，第二个参数（下标为1）开始，才是需要求和的整数。",
+          "pageFrom": 52,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 5,
+          "quote": "为什么对 argv 的下标遍历是从1开始 ？",
+          "pageFrom": 51,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 2,
+          "quote": "for (i = 1; i < argc; i++) { sscanf(argv[i], \"%d\", &val); sum += val; }",
+          "pageFrom": 52,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 5,
+          "quote": "printf(\"%s: \", argv[0]); for (i = 1; i < argc; i++) printf(\"%s \", argv[i]);",
+          "pageFrom": 51,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 8,
+      "citationsTotal": 8,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 24,
+      "question": "指针数组和二维数组在内存布局上有什么区别？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "26:c0",
+        "27:c1"
+      ],
+      "note": "26:c0 说明两者语法相似，27:c1 列出内存布局与行长是否固定的区别。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "27:c1",
+        "2:c0",
+        "13:c0",
+        "1:c0",
+        "3:c0"
+      ],
+      "firstTokenMs": 1604,
+      "answer": "指针数组和二维数组在内存布局上的区别，资料中有明确说明：\n\n**二维数组：全部元素的空间连续排列。** 资料指出\"二维数组中全部元素的空间连续排列\" [1]，并配有图示说明\"二维数组的存储空间连续排列\" [1]。此外，二维数组\"每一行中元素的个数在数组定义时明确规定，且每一行大小相同\" [1]，且\"a 的每一行以及每行的元素，在内存中连续存储\" [7]。\n\n**指针数组：只有各个指针的空间连续排列，其所指的数据元素的存储顺序取决于存储空间的分配方法，并且通常不连续。** 资料指出\"指针数组中，只有各个指针的空间连续排列，其所指的数据元素的存储顺序取决于存储空间的分配方法，并且通常不连续\" [1]，并配有图示说明\"指针数组的存储空间连续排列\"\"指向的数据元素之间通常不连续\" [1]。同时\"指针数组中各个指针所指向的空间的长度不一定相同\" [1]，\"指针数组为指针分配空间，其所指向的数据元素所需要的存储空间是通过其他方式另行分配的\" [1]。\n\n**空间占用的对比：** 资料以 char a[7][23] 与 char *b[7] 为例，二维数组空间为 7*23 Bytes，指针数组空间为 7*8+x1+x2+…x7 Bytes [1]。\n\n综上，核心区别是：二维数组的所有元素在内存中连续排列；指针数组中只有指针本身连续排列，指针所指向的数据元素通常不连续，其存储顺序取决于分配方式 [1]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "二维数组中全部元素的空间连续排列；指针数组中，只有各个指针的空间连续排列，其所指的数据元素的存储顺序取决于存储空间的分配方法，并且通常不连续。",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "二维数组每一行中元素的个数在数组定义时明确规定，且每一行大小相同；而指针数组中各个指针所指向的空间的长度不一定相同。",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "指针数组为指针分配空间，其所指向的数据元素所需要的存储空间是通过其他方式另行分配的。",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "二维数组的存储空间连续排列",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "指针数组的存储空间连续排列",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "指向的数据元素之间通常不连续",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 1,
+          "quote": "space is 7*23 Bytes space is 7*8+x1 +x2+…x7 Bytes",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 7,
+          "quote": "a 的每一行以及每行的元素，在内存中连续存储。",
+          "pageFrom": 16,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3 多维数组与数组指针",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 8,
+      "citationsTotal": 8,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 25,
+      "question": "命令行参数是如何传给 main 函数的？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "27:c2",
+        "30:c2"
+      ],
+      "note": "27:c2 和 30:c2 都说明命令行参数以字符串形式传入 main 的 argv。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "27:c2",
+        "6:c0",
+        "31:c0",
+        "30:c2",
+        "30:c1"
+      ],
+      "firstTokenMs": 1531,
+      "answer": "命令行参数以字符串的形式传进程序的 main 函数中；如果程序要接收命令行参数，需要在 main 函数定义中指定参数 [1]。\n\n具体来说：\n- `argc` 表示包含程序名在内的参数个数 [4]。\n- `argv[0]` 指向命令行上调用程序时输入的程序名（字符串）[4]。\n- 从 `argv[1]` 到 `argv[argc-1]` 分别顺次指向命令行中第 1 个到第 argc-1 个参数（字符串形式）[4]。\n\n例如，程序编译后可执行程序名为 c8_10，在命令行输入 `$ c8_10 tell me you love c` 时，`argc` 等于 6，因为输入的命令有 6 个字符串；`argv[0]` 指向字符串“c8_10”；`argv[1]` 指向字符串“tell”；`argv[2]` 指向字符串“me”；以此类推 [4]。\n\n这也解释了例8-11中对 argv 的下标遍历从 1 开始的原因：第一个参数 `argv[0]` 是应用程序名，第二个参数（下标为1）开始，才是需要求和的整数 [3][4]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "命令行参数将以字符串的形式传进程序的 main 函数中。如果程序要接收命令行参数，需要在main 函数定义中指定参数。",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 4,
+          "quote": "argc 表示包含程序名在内的参数个数。",
+          "pageFrom": 49,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 4,
+          "quote": "argv[0] 指向命令行上调用程序时输入的程序名（字符串）",
+          "pageFrom": 49,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 4,
+          "quote": "从 argv[1] 到 argv[argc-1] 分别顺次指向命令行中第 1 个到第 argc-1 个参数（字符串形式）。",
+          "pageFrom": 49,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 4,
+          "quote": "$ c8_10 tell me you love c",
+          "pageFrom": 49,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 4,
+          "quote": "argc 等于 6，因为输入的命令有 6 个字符串；argv[0]指向字符串“c8_10”；argv[1] 指向字符串“tell”；argv[2] 指向字符串“me”；以此类推。",
+          "pageFrom": 49,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 3,
+          "quote": "为什么对 argv的下标遍历是从1开始 ？因为第一个参数 argv[0]是应用程序名，第二个参数（下标为1）开始，才是需要求和的整数。",
+          "pageFrom": 52,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        },
+        {
+          "refId": 4,
+          "quote": "为什么对 argv 的下标遍历是从1开始 ？",
+          "pageFrom": 49,
+          "headingPath": "3. 输入help后按",
+          "documentTitle": "test.pdf"
+        }
+      ],
+      "citationsValid": 8,
+      "citationsTotal": 8,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 26,
+      "question": "这本书里有没有讲 Rust 的所有权机制？",
+      "type": "absent",
+      "expectedChunkKeys": [],
+      "note": "全库没有 Rust 内容，正确行为是拒答并说明没有找到。",
+      "status": "ok",
+      "recallHit": null,
+      "topKeys": [],
+      "firstTokenMs": 1557,
+      "answer": "知识库里没有找到相关内容。\n\n提供的资料中没有出现任何关于 Rust 或所有权机制的片段，因此无法回答这本书是否讲过该内容。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": true,
+      "error": null
+    },
+    {
+      "id": 27,
+      "question": "有没有介绍 Python 的 GIL？",
+      "type": "absent",
+      "expectedChunkKeys": [],
+      "note": "全库没有 Python GIL 内容，正确行为是拒答。",
+      "status": "ok",
+      "recallHit": null,
+      "topKeys": [],
+      "firstTokenMs": 1492,
+      "answer": "知识库里没有找到相关内容。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": true,
+      "error": null
+    },
+    {
+      "id": 28,
+      "question": "有没有讲 Kubernetes 的 Pod 调度？",
+      "type": "absent",
+      "expectedChunkKeys": [],
+      "note": "全库没有 Kubernetes 内容，正确行为是拒答。",
+      "status": "ok",
+      "recallHit": null,
+      "topKeys": [],
+      "firstTokenMs": 1327,
+      "answer": "知识库里没有找到相关内容。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": true,
+      "error": null
+    },
+    {
+      "id": 29,
+      "question": "有没有介绍 MySQL 的 B+ 树索引？",
+      "type": "absent",
+      "expectedChunkKeys": [],
+      "note": "只讲了 HNSW，没有 B+ 树索引内容，正确行为是拒答。",
+      "status": "ok",
+      "recallHit": null,
+      "topKeys": [],
+      "firstTokenMs": 1768,
+      "answer": "知识库里没有找到相关内容。\n\n资料中只提到“HNSW 是近似最近邻索引”[1]，没有关于 MySQL 的 B+ 树索引的介绍。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "HNSW 是近似最近邻索引。",
+          "pageFrom": 2,
+          "headingPath": "第二章 索引",
+          "documentTitle": "检索验收语料"
+        }
+      ],
+      "citationsValid": 1,
+      "citationsTotal": 1,
+      "refusalHit": true,
+      "error": null
+    },
+    {
+      "id": 30,
+      "question": "有没有讲过 WebAssembly 的垃圾回收？",
+      "type": "absent",
+      "expectedChunkKeys": [],
+      "note": "全库没有 WebAssembly 内容，正确行为是拒答。",
+      "status": "ok",
+      "recallHit": null,
+      "topKeys": [],
+      "firstTokenMs": 1256,
+      "answer": "知识库里没有找到相关内容。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": true,
+      "error": null
+    }
+  ]
+}

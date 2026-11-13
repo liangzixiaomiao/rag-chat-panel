@@ -1,12 +1,22 @@
 import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { validateCitations } from '@/lib/citation';
+import {
+  COMMAND_DEFAULT_QUERY,
+  COMMAND_RETRIEVAL,
+  buildCommandSystemPrompt,
+  buildCommandUserMessage,
+  buildCompareContext,
+  buildOutlineContext,
+  isCommandName,
+} from '@/lib/commands';
+import type { CommandName } from '@/lib/commands';
 import { serverClient } from '@/lib/db';
 import { estimateTokens } from '@/lib/embed';
 import { canSpend, recordUsage } from '@/lib/guard';
-import { buildContextBlock, buildMessages } from '@/lib/prompt';
+import { buildContextBlock, buildMessages, buildSystemPrompt } from '@/lib/prompt';
 import { rewriteQuery } from '@/lib/query';
-import { retrieve } from '@/lib/retrieve';
+import { listParents, retrieve, retrieveCompare } from '@/lib/retrieve';
 import type { Citation, Retrieved } from '@/lib/types';
 
 const MODEL = 'deepseek-chat';
@@ -163,19 +173,47 @@ export async function POST(request: Request): Promise<Response> {
 
   const record = (typeof payload === 'object' && payload !== null ? payload : {}) as {
     question?: unknown;
+    scope?: unknown;
     documentId?: unknown;
     history?: unknown;
+    command?: unknown;
+    commandArgs?: unknown;
+    selectedText?: unknown;
   };
 
-  if (typeof record.documentId !== 'string' || record.documentId.trim() === '') {
-    return NextResponse.json({ error: '缺少 documentId' }, { status: 400 });
+  const scope = record.scope === undefined ? 'current' : record.scope;
+  if (scope !== 'current' && scope !== 'all') {
+    return NextResponse.json({ error: "scope 只能是 'current' 或 'all'" }, { status: 400 });
   }
   if (typeof record.question !== 'string' || record.question.trim() === '') {
     return NextResponse.json({ error: '缺少 question' }, { status: 400 });
   }
 
+  let command: CommandName | undefined;
+  if (record.command !== undefined) {
+    if (!isCommandName(record.command)) {
+      return NextResponse.json({ error: '未知指令' }, { status: 400 });
+    }
+    command = record.command;
+  }
+
+  const commandArgs = Array.isArray(record.commandArgs)
+    ? record.commandArgs
+        .filter((item): item is string => typeof item === 'string' && item.trim() !== '')
+        .map((item) => item.trim())
+    : [];
+  const selectedText = typeof record.selectedText === 'string' ? record.selectedText.trim() : '';
+
+  // scope=all 时忽略 documentId；scope=current（含未传 scope）时 documentId 必填，不做静默全库
+  let documentId: string | null = null;
+  if (scope === 'current') {
+    if (typeof record.documentId !== 'string' || record.documentId.trim() === '') {
+      return NextResponse.json({ error: 'scope=current 时必须提供 documentId' }, { status: 400 });
+    }
+    documentId = record.documentId;
+  }
+
   const question = record.question;
-  const documentId = record.documentId;
   const history = Array.isArray(record.history)
     ? record.history
         .filter(
@@ -188,14 +226,78 @@ export async function POST(request: Request): Promise<Response> {
         .map((item) => ({ role: item.role, content: item.content }))
     : [];
 
-  // 检索用改写后的问题，生成用原问题
-  const rewrite = await rewriteQuery({ question, history });
-  const searchQuery = rewrite.query === '' ? question : rewrite.query;
+  let parents: Retrieved[] = [];
+  let messages: ChatMessage[] = [];
+  let citationsEnabled = true;
+  let askAnswer: string | null = null;
 
-  let parents: Retrieved[];
   try {
-    const result = await retrieve({ question: searchQuery, documentId, topK: 20, maxParents: 8 });
-    parents = result.parents;
+    if (command === 'explain') {
+      // 选中原文直接当上下文，不做检索
+      const text = selectedText !== '' ? selectedText : commandArgs.join(' ').trim();
+      if (text === '') {
+        return NextResponse.json({ error: '请先选中要解释的原文，或写在 /explain 后面' }, { status: 400 });
+      }
+      messages = [
+        { role: 'system', content: buildCommandSystemPrompt('explain', buildSystemPrompt()) },
+        { role: 'user', content: buildCommandUserMessage('explain', `【资料】\n${text}`) },
+      ];
+      citationsEnabled = false;
+    } else if (command === 'compare') {
+      if (commandArgs.length !== 2) {
+        return NextResponse.json({ error: '对比需要两个对象，例如 /compare 第一章 vs 第二章' }, { status: 400 });
+      }
+
+      const params = COMMAND_RETRIEVAL.compare;
+      const compare = await retrieveCompare({
+        scope,
+        documentId,
+        targets: [commandArgs[0], commandArgs[1]],
+        topK: params.topK,
+        maxParentsPerSide: params.maxParents,
+      });
+
+      if (!compare.ok) {
+        askAnswer = compare.message;
+      } else {
+        parents = [...compare.sides[0].parents, ...compare.sides[1].parents];
+        messages = [
+          { role: 'system', content: buildCommandSystemPrompt('compare', buildSystemPrompt()) },
+          { role: 'user', content: buildCommandUserMessage('compare', buildCompareContext(compare.sides)) },
+        ];
+        citationsEnabled = false;
+      }
+    } else if (command === 'summarize' || command === 'outline') {
+      const params = COMMAND_RETRIEVAL[command];
+      if (command === 'outline') {
+        // 大纲要看整篇结构，按父块顺序取，不做语义检索
+        parents = listParents({ documentId, limit: params.maxParents });
+      } else {
+        const searchQuestion = commandArgs.length > 0 ? commandArgs.join(' ') : COMMAND_DEFAULT_QUERY.summarize;
+        parents = (
+          await retrieve({
+            question: searchQuestion,
+            documentId,
+            topK: params.topK,
+            maxParents: params.maxParents,
+          })
+        ).parents;
+      }
+
+      const context = command === 'outline' ? buildOutlineContext(parents) : buildContextBlock(parents);
+      messages = [
+        { role: 'system', content: buildCommandSystemPrompt(command, buildSystemPrompt()) },
+        { role: 'user', content: buildCommandUserMessage(command, context) },
+      ];
+      // /outline 只要结构，不做引用抽取
+      citationsEnabled = command === 'summarize';
+    } else {
+      // 检索用改写后的问题，生成用原问题
+      const rewrite = await rewriteQuery({ question, history });
+      const searchQuery = rewrite.query === '' ? question : rewrite.query;
+      parents = (await retrieve({ question: searchQuery, documentId, topK: 20, maxParents: 8 })).parents;
+      messages = buildMessages({ question, parents, history });
+    }
   } catch (err) {
     logError('检索失败', err);
     return NextResponse.json({ error: '检索失败，请查看服务端日志' }, { status: 500 });
@@ -211,7 +313,19 @@ export async function POST(request: Request): Promise<Response> {
       };
 
       try {
-        if (parents.length === 0) {
+        if (askAnswer !== null) {
+          send(null, { text: askAnswer });
+          send('citations', []);
+          try {
+            saveAssistantMessage(conversationId, askAnswer, []);
+          } catch (err) {
+            logError('落库失败（追问分支）', err);
+          }
+          send('done', {});
+          return;
+        }
+
+        if (parents.length === 0 && command !== 'explain') {
           send(null, { text: NO_CONTEXT_ANSWER });
           send('citations', []);
           try {
@@ -223,7 +337,6 @@ export async function POST(request: Request): Promise<Response> {
           return;
         }
 
-        const messages = buildMessages({ question, parents, history });
         const estimated = estimateTokens(messages.map((item) => item.content)) + CHAT_MAX_OUTPUT;
         if (!canSpend(estimated)) {
           send('error', { error: '今日 LLM 额度已用完' });
@@ -238,16 +351,20 @@ export async function POST(request: Request): Promise<Response> {
         recordUsage(completion.tokens ?? estimateTokens([completion.content]));
 
         let citations: Citation[] = [];
-        try {
-          citations = await requestCitations(completion.content, parents);
-        } catch (err) {
-          logError('引用抽取失败', err);
+        if (citationsEnabled) {
+          try {
+            citations = await requestCitations(completion.content, parents);
+          } catch (err) {
+            logError('引用抽取失败', err);
+          }
+          send('citations', citations.map((citation) => ({
+            ...citation,
+            pageTo: parents[citation.refId - 1].pageTo,
+            fullContext: parents[citation.refId - 1].fullContext,
+          })));
+        } else {
+          send('citations', []);
         }
-        send('citations', citations.map((citation) => ({
-          ...citation,
-          pageTo: parents[citation.refId - 1].pageTo,
-          fullContext: parents[citation.refId - 1].fullContext,
-        })));
 
         try {
           saveAssistantMessage(conversationId, completion.content, citations);

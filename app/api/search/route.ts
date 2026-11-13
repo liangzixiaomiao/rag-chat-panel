@@ -4,7 +4,9 @@ import { retrieve } from '@/lib/retrieve';
 
 const bodySchema = z.object({
   question: z.string().min(1),
-  documentId: z.string().min(1),
+  scope: z.enum(['current', 'all']).optional(),
+  documentId: z.string().min(1).optional(),
+  topK: z.number().int().min(1).max(100).optional(),
 });
 
 export async function POST(request: Request): Promise<NextResponse> {
@@ -17,7 +19,17 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   const parsed = bodySchema.safeParse(payload);
   if (!parsed.success) {
-    return NextResponse.json({ error: '缺少 question 或 documentId' }, { status: 400 });
+    return NextResponse.json({ error: '缺少 question，或 scope/documentId 格式不对' }, { status: 400 });
+  }
+
+  // 不传 scope 时按 current 处理，保持旧调用方兼容；scope=all 时必须显式声明，不做静默全库
+  const scope = parsed.data.scope ?? 'current';
+  let documentId: string | null = null;
+  if (scope === 'current') {
+    if (parsed.data.documentId === undefined) {
+      return NextResponse.json({ error: 'scope=current 时必须提供 documentId' }, { status: 400 });
+    }
+    documentId = parsed.data.documentId;
   }
 
   // 与 embed 的 token 化字符集保持一致：纯标点/空白提取不到 token 的问题直接拒绝
@@ -27,7 +39,8 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   const result = await retrieve({
     question: parsed.data.question,
-    documentId: parsed.data.documentId,
+    documentId,
+    topK: parsed.data.topK,
   });
 
   return NextResponse.json(result);

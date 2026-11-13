@@ -58,7 +58,8 @@ export default function CitationDrawer({ citation, onClose }: CitationDrawerProp
           </button>
         </div>
 
-        <p style={{ margin: '8px 0 0' }}>{citation.headingPath === null ? '(无标题)' : citation.headingPath}</p>
+        <p style={{ margin: '8px 0 0', fontWeight: 'bold' }}>{citation.documentTitle}</p>
+        <p style={{ margin: '4px 0 0' }}>{citation.headingPath === null ? '(无标题)' : citation.headingPath}</p>
         <p style={{ margin: '4px 0 12px' }}>
           p{citation.pageFrom}-{citation.pageTo === null ? '?' : citation.pageTo}
         </p>

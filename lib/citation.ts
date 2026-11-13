@@ -39,6 +39,7 @@ export function validateCitations(raw: unknown, parents: Retrieved[]): Citation[
       quote,
       pageFrom: parent.pageFrom,
       headingPath: parent.headingPath,
+      documentTitle: parent.documentTitle,
     });
   }
 

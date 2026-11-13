@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "question": "数组类型由什么来描述？",
+    "type": "fact",
+    "expectedChunkKeys": ["12:c0"],
+    "note": "12:c0 明确写出数组类型由 <元素类型> [<数组长度>] 描述。"
+  },
+  {
+    "id": 2,
+    "question": "数组指针变量怎么定义？",
+    "type": "fact",
+    "expectedChunkKeys": ["12:c1"],
+    "note": "12:c1 给出数组指针变量的定义语法 <类型> (*<变量名>)[<元素个数>]。"
+  },
+  {
+    "id": 3,
+    "question": "a+1 和 &a+1 分别指向哪里？",
+    "type": "fact",
+    "expectedChunkKeys": ["12:c2"],
+    "note": "12:c2 对比 a+1 指向第二个元素、&a+1 指向数组末尾之后的位置。"
+  },
+  {
+    "id": 4,
+    "question": "二维数组 int a[4][5] 的每一行在内存里怎么存放？",
+    "type": "fact",
+    "expectedChunkKeys": ["14:c1"],
+    "note": "14:c1 说明二维数组的每一行以及行内元素都在内存中连续存储。"
+  },
+  {
+    "id": 5,
+    "question": "多维数组的元素下标和存储位置之间是什么关系？",
+    "type": "fact",
+    "expectedChunkKeys": ["21:c0"],
+    "note": "21:c0 说明下标与相对起始地址的偏移量之间存在关系映射。"
+  },
+  {
+    "id": 6,
+    "question": "数组指针和指针数组分别是什么？",
+    "type": "cross",
+    "expectedChunkKeys": ["12:c1", "25:c0"],
+    "note": "12:c1 定义数组指针，25:c0 定义指针数组，需要把两个概念放在一起比较。"
+  },
+  {
+    "id": 7,
+    "question": "函数指针为什么能让排序算法变得通用？",
+    "type": "cross",
+    "expectedChunkKeys": ["33:c1", "34:c0"],
+    "note": "33:c1 说明函数指针把算法流程和具体动作分离，34:c0 给出通用冒泡排序框架。"
+  },
+  {
+    "id": 8,
+    "question": "用指针数组给字符串排序为什么比直接交换字符串更高效？",
+    "type": "cross",
+    "expectedChunkKeys": ["25:c2", "25:c4"],
+    "note": "25:c2 用指针数组做索引避免整行搬移，25:c4 说明排序后原始数据没有变化。"
+  },
+  {
+    "id": 9,
+    "question": "这本书里有没有讲 Rust 的所有权机制？",
+    "type": "absent",
+    "expectedChunkKeys": [],
+    "note": "全书没有 Rust 内容，正确行为是拒答并说明知识库里没有找到。"
+  },
+  {
+    "id": 10,
+    "question": "书里有没有介绍 Python 的 GIL？",
+    "type": "absent",
+    "expectedChunkKeys": [],
+    "note": "全书没有 Python GIL 内容，正确行为是拒答。"
+  }
+]

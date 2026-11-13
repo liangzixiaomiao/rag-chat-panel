@@ -1,0 +1,500 @@
+{
+  "set": "m0",
+  "generatedAt": "2026-11-13T18:29:20.151Z",
+  "baseUrl": "http://localhost:3000",
+  "documentId": "82ee21f3-f285-463c-9f8c-bdd715f1f911",
+  "params": {
+    "chunkSize": 400,
+    "parentMaxChars": 1000,
+    "topK": 5,
+    "rerank": false
+  },
+  "metrics": {
+    "total": 10,
+    "evaluated": 10,
+    "skipped": 0,
+    "errors": 0,
+    "recall": {
+      "hit": 6,
+      "total": 8,
+      "value": 0.75
+    },
+    "citationAccuracy": {
+      "valid": 23,
+      "total": 23,
+      "value": 1
+    },
+    "refusal": {
+      "hit": 2,
+      "total": 2,
+      "value": 1
+    },
+    "firstTokenMs": {
+      "avg": 1541,
+      "p95": 1986,
+      "max": 1986,
+      "threshold": 60000,
+      "pass": true
+    }
+  },
+  "comparison": {
+    "previousReport": "report-20261113T182752.json",
+    "changedParams": [],
+    "warnings": [],
+    "previousRecall": 0.75,
+    "currentRecall": 0.75,
+    "regressions": []
+  },
+  "questions": [
+    {
+      "id": 1,
+      "question": "数组类型由什么来描述？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "12:c0"
+      ],
+      "note": "12:c0 明确写出数组类型由 <元素类型> [<数组长度>] 描述。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "12:c0",
+        "11:c0",
+        "2:c0",
+        "14:c1",
+        "25:c0"
+      ],
+      "firstTokenMs": 1933,
+      "answer": "数组类型由<元素类型> [<数组长度>]来描述 [1]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "数组类型由<元素类型> [<数组长度>]来描述。",
+          "pageFrom": 11,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf",
+          "pageTo": 11,
+          "fullContext": "8.2.1 数组类型\n\n➢ C语言中的数组类型是相对与诸如 int，double，float 等单一类型而言的，数组类型是单一类型的聚合体，属于聚合体类型。➢ 数组类型由<元素类型> [<数组长度>]来描述。➢ 对于数组类型的变量（即我们常说的‘数组’，将数组看成数组类型的变量），对它用sizeof运算符返回的是整个数组所占内存空间的字节数。例如int a[10]，float b[20]，char c[30]这三个数组的类型分别为int [10]，float [20]和char [30]。double d_arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0}; double *pd = d_arr; printf(\"sizeof d_arr is %d\\n\", sizeof(d_arr)); printf(\"sizeof pd is %d\\n\", sizeof(pd));程序输出⚫ 数组既然是数组类型的数据实体，当然也可以用取址符 & 进行取地址。⚫ 数组的地址，是它所占内存空间的起始地址，在数值上等于它首元素的地址，但和首元素地址的类型不一样。⚫ 数组的地址类型为指向数组的指针，简称数组指针 ，数组指针变量的定义如下：<类型> (*<变量名>)[<元素个数>]; int a[5], *p; float b[20]; char c[30]; p = a; int (*pa)[5] = &a; float (*pb)[20] = &b; char (*pc)[30] = &c;定义了三个数组指针 pa, pb, pc，类型分别为int (*)[10], float (*)[20] 和 char(*)[30]，分别指向数组a, b, c，而不是指向数组的第一个元素。p a p pa a指向数组首元素指向数组000000000061FE20 : 000000000061FE20什么？a 的值和 a 的地址竟然一样！float a[10]; printf(\"%p : %p\\n\", a, &a);输出a 是一个数组，a 和 &a 具有相同的值，但却具有不同的类型。因为类型不同，加 1 时指针指向的位置也不同：a+1 指向数组 a 的第二个元素；&a+1 指向数组 a 最后一个元素之后的位置。首元素地址a a[0] a[1] a[2] a[3] a[4] a[5] a[6] a[7] a[8] a[9]首元素地址+1 a[0] a[1] a[2] a[3] a[4] a[5] a[6] a[7] a[8] a[9]数组地址&a数组地址+1 printf(\"%d : %d\\n\", sizeof(a), sizeof(&a));输出a 和 &a 真的一样吗？？"
+        }
+      ],
+      "citationsValid": 1,
+      "citationsTotal": 1,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 2,
+      "question": "数组指针变量怎么定义？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "12:c1"
+      ],
+      "note": "12:c1 给出数组指针变量的定义语法 <类型> (*<变量名>)[<元素个数>]。",
+      "status": "ok",
+      "recallHit": false,
+      "topKeys": [
+        "1:c0",
+        "5:c0",
+        "13:c0",
+        "25:c0",
+        "10:c0"
+      ],
+      "firstTokenMs": 1322,
+      "answer": "数组指针变量的定义形式为：`<类型> (*<变量名>)[<元素个数>];` [6]\n\n资料中给出的定义示例包括：`int (*pa)[5] = &a;`、`float (*pb)[20] = &b;`、`char (*pc)[30] = &c;`，分别指向数组 a、b、c，而不是指向数组的第一个元素 [6]。",
+      "citations": [
+        {
+          "refId": 6,
+          "quote": "数组指针变量的定义如下：<类型> (*<变量名>)[<元素个数>];",
+          "pageFrom": 11,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf",
+          "pageTo": 11,
+          "fullContext": "8.2.1 数组类型\n\n➢ C语言中的数组类型是相对与诸如 int，double，float 等单一类型而言的，数组类型是单一类型的聚合体，属于聚合体类型。➢ 数组类型由<元素类型> [<数组长度>]来描述。➢ 对于数组类型的变量（即我们常说的‘数组’，将数组看成数组类型的变量），对它用sizeof运算符返回的是整个数组所占内存空间的字节数。例如int a[10]，float b[20]，char c[30]这三个数组的类型分别为int [10]，float [20]和char [30]。double d_arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0}; double *pd = d_arr; printf(\"sizeof d_arr is %d\\n\", sizeof(d_arr)); printf(\"sizeof pd is %d\\n\", sizeof(pd));程序输出⚫ 数组既然是数组类型的数据实体，当然也可以用取址符 & 进行取地址。⚫ 数组的地址，是它所占内存空间的起始地址，在数值上等于它首元素的地址，但和首元素地址的类型不一样。⚫ 数组的地址类型为指向数组的指针，简称数组指针 ，数组指针变量的定义如下：<类型> (*<变量名>)[<元素个数>]; int a[5], *p; float b[20]; char c[30]; p = a; int (*pa)[5] = &a; float (*pb)[20] = &b; char (*pc)[30] = &c;定义了三个数组指针 pa, pb, pc，类型分别为int (*)[10], float (*)[20] 和 char(*)[30]，分别指向数组a, b, c，而不是指向数组的第一个元素。p a p pa a指向数组首元素指向数组000000000061FE20 : 000000000061FE20什么？a 的值和 a 的地址竟然一样！float a[10]; printf(\"%p : %p\\n\", a, &a);输出a 是一个数组，a 和 &a 具有相同的值，但却具有不同的类型。因为类型不同，加 1 时指针指向的位置也不同：a+1 指向数组 a 的第二个元素；&a+1 指向数组 a 最后一个元素之后的位置。首元素地址a a[0] a[1] a[2] a[3] a[4] a[5] a[6] a[7] a[8] a[9]首元素地址+1 a[0] a[1] a[2] a[3] a[4] a[5] a[6] a[7] a[8] a[9]数组地址&a数组地址+1 printf(\"%d : %d\\n\", sizeof(a), sizeof(&a));输出a 和 &a 真的一样吗？？"
+        },
+        {
+          "refId": 6,
+          "quote": "int (*pa)[5] = &a; float (*pb)[20] = &b; char (*pc)[30] = &c;定义了三个数组指针 pa, pb, pc，类型分别为int (*)[10], float (*)[20] 和 char(*)[30]，分别指向数组a, b, c，而不是指向数组的第一个元素。",
+          "pageFrom": 11,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf",
+          "pageTo": 11,
+          "fullContext": "8.2.1 数组类型\n\n➢ C语言中的数组类型是相对与诸如 int，double，float 等单一类型而言的，数组类型是单一类型的聚合体，属于聚合体类型。➢ 数组类型由<元素类型> [<数组长度>]来描述。➢ 对于数组类型的变量（即我们常说的‘数组’，将数组看成数组类型的变量），对它用sizeof运算符返回的是整个数组所占内存空间的字节数。例如int a[10]，float b[20]，char c[30]这三个数组的类型分别为int [10]，float [20]和char [30]。double d_arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0}; double *pd = d_arr; printf(\"sizeof d_arr is %d\\n\", sizeof(d_arr)); printf(\"sizeof pd is %d\\n\", sizeof(pd));程序输出⚫ 数组既然是数组类型的数据实体，当然也可以用取址符 & 进行取地址。⚫ 数组的地址，是它所占内存空间的起始地址，在数值上等于它首元素的地址，但和首元素地址的类型不一样。⚫ 数组的地址类型为指向数组的指针，简称数组指针 ，数组指针变量的定义如下：<类型> (*<变量名>)[<元素个数>]; int a[5], *p; float b[20]; char c[30]; p = a; int (*pa)[5] = &a; float (*pb)[20] = &b; char (*pc)[30] = &c;定义了三个数组指针 pa, pb, pc，类型分别为int (*)[10], float (*)[20] 和 char(*)[30]，分别指向数组a, b, c，而不是指向数组的第一个元素。p a p pa a指向数组首元素指向数组000000000061FE20 : 000000000061FE20什么？a 的值和 a 的地址竟然一样！float a[10]; printf(\"%p : %p\\n\", a, &a);输出a 是一个数组，a 和 &a 具有相同的值，但却具有不同的类型。因为类型不同，加 1 时指针指向的位置也不同：a+1 指向数组 a 的第二个元素；&a+1 指向数组 a 最后一个元素之后的位置。首元素地址a a[0] a[1] a[2] a[3] a[4] a[5] a[6] a[7] a[8] a[9]首元素地址+1 a[0] a[1] a[2] a[3] a[4] a[5] a[6] a[7] a[8] a[9]数组地址&a数组地址+1 printf(\"%d : %d\\n\", sizeof(a), sizeof(&a));输出a 和 &a 真的一样吗？？"
+        }
+      ],
+      "citationsValid": 2,
+      "citationsTotal": 2,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 3,
+      "question": "a+1 和 &a+1 分别指向哪里？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "12:c2"
+      ],
+      "note": "12:c2 对比 a+1 指向第二个元素、&a+1 指向数组末尾之后的位置。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "12:c2",
+        "53:c0",
+        "49:c0",
+        "45:c0",
+        "40:c0"
+      ],
+      "firstTokenMs": 1480,
+      "answer": "根据资料：\n\n- **a+1**：指向数组 a 的第二个元素 [1]。\n- **&a+1**：指向数组 a 最后一个元素之后的位置 [1]。\n\n资料中说明，a 和 &a 虽然值相同，但类型不同，因此加 1 时指针指向的位置也不同 [1]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "因为类型不同，加 1 时指针指向的位置也不同：a+1 指向数组 a 的第二个元素；&a+1 指向数组 a 最后一个元素之后的位置。",
+          "pageFrom": 11,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf",
+          "pageTo": 11,
+          "fullContext": "8.2.1 数组类型\n\n➢ C语言中的数组类型是相对与诸如 int，double，float 等单一类型而言的，数组类型是单一类型的聚合体，属于聚合体类型。➢ 数组类型由<元素类型> [<数组长度>]来描述。➢ 对于数组类型的变量（即我们常说的‘数组’，将数组看成数组类型的变量），对它用sizeof运算符返回的是整个数组所占内存空间的字节数。例如int a[10]，float b[20]，char c[30]这三个数组的类型分别为int [10]，float [20]和char [30]。double d_arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0}; double *pd = d_arr; printf(\"sizeof d_arr is %d\\n\", sizeof(d_arr)); printf(\"sizeof pd is %d\\n\", sizeof(pd));程序输出⚫ 数组既然是数组类型的数据实体，当然也可以用取址符 & 进行取地址。⚫ 数组的地址，是它所占内存空间的起始地址，在数值上等于它首元素的地址，但和首元素地址的类型不一样。⚫ 数组的地址类型为指向数组的指针，简称数组指针 ，数组指针变量的定义如下：<类型> (*<变量名>)[<元素个数>]; int a[5], *p; float b[20]; char c[30]; p = a; int (*pa)[5] = &a; float (*pb)[20] = &b; char (*pc)[30] = &c;定义了三个数组指针 pa, pb, pc，类型分别为int (*)[10], float (*)[20] 和 char(*)[30]，分别指向数组a, b, c，而不是指向数组的第一个元素。p a p pa a指向数组首元素指向数组000000000061FE20 : 000000000061FE20什么？a 的值和 a 的地址竟然一样！float a[10]; printf(\"%p : %p\\n\", a, &a);输出a 是一个数组，a 和 &a 具有相同的值，但却具有不同的类型。因为类型不同，加 1 时指针指向的位置也不同：a+1 指向数组 a 的第二个元素；&a+1 指向数组 a 最后一个元素之后的位置。首元素地址a a[0] a[1] a[2] a[3] a[4] a[5] a[6] a[7] a[8] a[9]首元素地址+1 a[0] a[1] a[2] a[3] a[4] a[5] a[6] a[7] a[8] a[9]数组地址&a数组地址+1 printf(\"%d : %d\\n\", sizeof(a), sizeof(&a));输出a 和 &a 真的一样吗？？"
+        }
+      ],
+      "citationsValid": 1,
+      "citationsTotal": 1,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 4,
+      "question": "二维数组 int a[4][5] 的每一行在内存里怎么存放？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "14:c1"
+      ],
+      "note": "14:c1 说明二维数组的每一行以及行内元素都在内存中连续存储。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "14:c1",
+        "21:c0",
+        "14:c2",
+        "25:c3",
+        "20:c0"
+      ],
+      "firstTokenMs": 1395,
+      "answer": "二维数组 `int a[4][5]` 的每一行以及每行的元素，在内存中都是连续存储的 [1]。并且二维数组中全部元素的空间连续排列 [8]。\n\n此外，多维数组（包括二维数组）的本质都是内存中一段连续的内存空间，元素从数组的起始地址开始连续存放 [2]。C 语言对多维数组采用“行优先存储”（row-major）规则，即优先存储最右侧下标对应的元素 [2]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "a 的每一行以及每行的元素，在内存中连续存储。",
+          "pageFrom": 16,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3 多维数组与数组指针",
+          "documentTitle": "test.pdf",
+          "pageTo": 16,
+          "fullContext": "8.3 多维数组与数组指针\n\n➢ 大于一维的数组称为多维数组，常用的多维数组包括二维数组、三维数组。➢ 对于N维数组（N>1），可以看成是一个“一维数组”，该“一维数组”的每个元素是一个N-1维数组。➢ 对于N-1维数组的理解，可递归进行，直到数组元素变为单一类型。多维数组可以看成数组的数组int a[2][3]; a a[0] a[1] a[0][0] a[0][1] a[0][2] a[1][0] a[1][1] a[1][2] a a[0][1]a[0][0] a[0][2] a[1][1]a[1][0] a[1][2] &a[0] &a[1] a+0 a+1数学上，可以把a看成一个集合：有2个元素，每个元素是一个子集合，每个子集合有3个数值（原子元素）；有6个元素，每个元素是一个数值（原子元素）。逻辑上，可看成2行3列，共6个元素。int a[2][3] = { {1,2,3}, {4,5,6} };二维数组可以看作数组的数组。例如 int a[4][5]可以看作一个长度为 4 的数组，如下图所示，这个数组的每个元素又是一个长度为 5 的 int 型数组（按习惯，称为二维数组的行）。 a 的每一行以及每行的元素，在内存中连续存储。在数学上， a 可看成一个 4× 5 的矩阵，共 4 行，每行 5 个元素。⚫ 按照隐式类型转换规则，数组名 a 作为表达式可以看作指向首元素的指针，而二维数组的元素为一维数组，因此 a 作为表达式具有数组指针类型int (*)[5]。⚫ 它的值指向二维数组中的第 1 个数组，也就是第1 行； a + 1 则指向二维数组中的第 2 个数组，即第 2 行，依次类推。二维数组名a可看作“行指针”（数组指针）二维数组可以看作数组的数组。例如 int a[4][5]可以看作一个长度为 4 的数组，如下图所示，这个数组的每个元素又是一个长度为 5 的 int 型数组（按习惯，称为二维数组的行）。 a 的每一行以及每行的元素，在内存中连续存储。在数学上， a 可看成一个 4× 5 的矩阵，共 4 行，每行 5 个元素。⚫ 如果对 a 进行解地址： *a 代表第 1 行的数组，作为表达式*a 指向第 1 行数组的第 1 个元素，具有 int*类型；*a+1 则指向第 1 行数组的第 2 个元素，依次类推。⚫ 按照上面的指针运算规则，有*(a+i)+j 指向第 i+1 行数组的第 j+1 个元素，解地址后*(*(a+i)+j)代表二维数组中第 i+1 行 j+1 列的元素。⚫ *(*(a+i)+j) 等价于 a[i][ j]对“行指针”进行解地址，得到“列指针”（元素指针）例8-3：按字符串长度排序（二维数组版）输入多行字符串（不超过 100 行，每行不超过 1000 个字符，每行的字符中可以包含空格），按照从短到长的顺序在标准输出上打印每行内容，如果长度一样则按字典序从小到大排列。分析： 定义一个全局二维 char 型数组 char a[100][1001] 保存输入的所有行。 a 的每一个元素，是一个 char[1001] 数组，用于保存输入的每一行字符串内容。对 a 数组的每行按照字符串的长度进行冒泡排序。输出文件输入文件 用命令行执行程序"
+        },
+        {
+          "refId": 8,
+          "quote": "(3) 二维数组中全部元素的空间连续排列；指针数组中，只有各个指针的空间连续排列，其所指的数据元素的存储顺序取决于存储空间的分配方法，并且通常不连续。",
+          "pageFrom": 43,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.2 指针数组与二维数组",
+          "documentTitle": "test.pdf",
+          "pageTo": 43,
+          "fullContext": "*例8-9-2：指针数组错用示例（更正后的示例）#include <stdio.h> void print_mat4x4(int (*a)[4]) // int a[][4] { int i, j; for (i = 0; i < 4; i++) for (j = 0; j < 4; j++) printf(j == 3 ? \"%d\\n\" : \"%d \", a[i][j]); } int main() { int array[4][4] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}; print_mat4x4(array); return 0; }写一个 print_mat4x4 函数，打印一个 4x4 的 int 型二维数组。✓ (3) 二维数组中全部元素的空间连续排列；指针数组中，只有各个指针的空间连续排列，其所指的数据元素的存储顺序取决于存储空间的分配方法，并且通常不连续。指针数组与二维数组的区别：(1) 二维数组每一行中元素的个数在数组定义时明确规定，且每一行大小相同；而指针数组中各个指针所指向的空间的长度不一定相同。(2) 指针数组为指针分配空间，其所指向的数据元素所需要的存储空间是通过其他方式另行分配的。例 8-9 中的指针数组和二维数组space is 7*23 Bytes space is 7*8+x1 +x2+…x7 Bytes二维数组char a[7][23];指针数组char *b[7]; (3) 二维数组中全部元素的空间连续排列；指针数组中，只有各个指针的空间连续排列，其所指的数据元素的存储顺序取决于存储空间的分配方法，并且通常不连续。1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9二维数组的存储空间连续排列1 2 3 1 2 3指针数组的存储空间连续排列指向的数据元素之间通常不连续物理结构（存储空间）… …逻辑结构 逻辑结构物理结构⚫ 用过 Linux 命令 ls 的读者都知道它的作用是列出当前目录下的子目录或文件。 ls 命令可以带参数，例如 ls -a、 ls -l、 ls –la 等，这些 ls 后的参数称为命令行参数。⚫ 命令行参数将以字符串的形式传进程序的 main 函数中。如果程序要接收命令行参数，需要在main 函数定义中指定参数。高手都喜欢用命令行"
+        },
+        {
+          "refId": 2,
+          "quote": "不管多少维的数组， 它们的本质都是内存中一段连续的内存空间，元素从数组的起始地址开始连续存放。",
+          "pageFrom": 26,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.3 高维数组的深入理解",
+          "documentTitle": "test.pdf",
+          "pageTo": 26,
+          "fullContext": "⚫ 不管多少维的数组， 它们的本质都是内存中一段连续的内存空间，元素从数组的起始地址开始连续存放。多维数组元素的下标与该元素的存储位置（以数组元素为单位相对数组起始地址的偏移量）之间存在一个关系映射。⚫ 对于一维数组很简单，下标即为偏移量。对于多维数组的下标， C 语言采用“行优先存储”（row-major）的规则，即优先存储最右侧下标对应的元素，如 int a[2][3]; ⚫ 在“行优先存储”规则下，一个 M×N 的二维数组元素 a[i][ j] 的下标与元素位置偏移量 loc 之间的关系为： loc = i×N + j即 a[i][ j] 元素的存储地址为 &a[0][0]+loc。通过上面的公式，可以将二维数组的二维下标转换成相对于数组首地址的线性偏移量（以数组元素为单位），从而直接访问该元素。a[0][0] a[0][1] a[0][2] a[1][0] a[1][1] a[1][2]起始地址“行优先存储” 的本质其实是“最右边的下标变化最快（rightmost subscriptvaries fastest）”，即在内存中从起始地址依次遍历数组的每个元素时，相邻元素中越靠右侧的下标变化的速度越快。与之相对的是“列优先存储”（column-major）或“最左边的下标变化最快（leftmost subscript varies fastest）”，Fotran， Matlab 等语言采用“列优先存储”。例8-5：方阵相乘（线性下标版）写一个函数实现 n 阶方阵相乘。在数组访问中使用线性下标。问题分析：n 阶方阵既可用二维数组表示，用两个下标访问，也可用以“行优先存储”的一维数组表示。不管矩阵是二维数组的形式还是一维数组的形式，它的元素只要是“行优先存储”，就可以通过下标映射公式计算它相对于第一个元素地址的线性偏移量，从而对它进行访问。a[0][0] a[0][1] a[0][2] a[1][0] a[1][1] a[1][2]起始地址int a[2][3]; void mat_multi(double *m1, double *m2, double *ret, int n) { int i, j, k; for (i = 0; i < n; ++i) for (j = 0; j < n; ++j) { ret[i*n + j] = 0; for (k = 0; k < n; ++k) ret[i*n + j] += m1[i*n + k] * m2[k*n + j]; } } void mat_print(const double *m, int n) { int i, j; for (i = 0; i < n; i++) for (j = 0; j < n; j++) printf(j == n - 1 ? \"%-10.2f\\n\" : \"%-10.2f \", m[i*n + j]); }采用“普通”指针作为函数参数，将二维数组的第一个元素地址传进来，在函数内部将双下标映射为线性偏移量从而访问元素。主函数调用：mat_multi(&A[0][0], &B[0][0], &R[0][0], n);例8-5：方阵相乘（线性下标版）写一个函数，使用线性下标实现 n 阶方阵相乘 R = A*B。多维数组是糖衣，一维数组是药！多维数组的本质是一维数组，因此，这才是多维数组访问的真正操作！但却不符合人的认知习惯。一般不这样写，不符合人的二维思维模式。发明二维数组，是为了方便人的理解。语法糖loc = i×N + j例8-5：方阵相乘（线性下标版）的启示实现多维数组访问效果，怎么写程序，既能符合计算机的真正操作，又能符合人的认知习惯？#include <stdio.h> #include <memory.h> #define N 1000 int* _mat; int _nrows, _ncols; int _left, _right, _up, _down; #define MAT(i, j) _mat[i * _ncols + j] char* _buf;启用宏，自己创造语法糖！语法糖：• 二维数组原来是糖衣，一维数组才是药！• 药虽苦，但治病。• 药不好吃，糖衣帮助。"
+        },
+        {
+          "refId": 2,
+          "quote": "对于多维数组的下标， C 语言采用“行优先存储”（row-major）的规则，即优先存储最右侧下标对应的元素",
+          "pageFrom": 26,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.3 高维数组的深入理解",
+          "documentTitle": "test.pdf",
+          "pageTo": 26,
+          "fullContext": "⚫ 不管多少维的数组， 它们的本质都是内存中一段连续的内存空间，元素从数组的起始地址开始连续存放。多维数组元素的下标与该元素的存储位置（以数组元素为单位相对数组起始地址的偏移量）之间存在一个关系映射。⚫ 对于一维数组很简单，下标即为偏移量。对于多维数组的下标， C 语言采用“行优先存储”（row-major）的规则，即优先存储最右侧下标对应的元素，如 int a[2][3]; ⚫ 在“行优先存储”规则下，一个 M×N 的二维数组元素 a[i][ j] 的下标与元素位置偏移量 loc 之间的关系为： loc = i×N + j即 a[i][ j] 元素的存储地址为 &a[0][0]+loc。通过上面的公式，可以将二维数组的二维下标转换成相对于数组首地址的线性偏移量（以数组元素为单位），从而直接访问该元素。a[0][0] a[0][1] a[0][2] a[1][0] a[1][1] a[1][2]起始地址“行优先存储” 的本质其实是“最右边的下标变化最快（rightmost subscriptvaries fastest）”，即在内存中从起始地址依次遍历数组的每个元素时，相邻元素中越靠右侧的下标变化的速度越快。与之相对的是“列优先存储”（column-major）或“最左边的下标变化最快（leftmost subscript varies fastest）”，Fotran， Matlab 等语言采用“列优先存储”。例8-5：方阵相乘（线性下标版）写一个函数实现 n 阶方阵相乘。在数组访问中使用线性下标。问题分析：n 阶方阵既可用二维数组表示，用两个下标访问，也可用以“行优先存储”的一维数组表示。不管矩阵是二维数组的形式还是一维数组的形式，它的元素只要是“行优先存储”，就可以通过下标映射公式计算它相对于第一个元素地址的线性偏移量，从而对它进行访问。a[0][0] a[0][1] a[0][2] a[1][0] a[1][1] a[1][2]起始地址int a[2][3]; void mat_multi(double *m1, double *m2, double *ret, int n) { int i, j, k; for (i = 0; i < n; ++i) for (j = 0; j < n; ++j) { ret[i*n + j] = 0; for (k = 0; k < n; ++k) ret[i*n + j] += m1[i*n + k] * m2[k*n + j]; } } void mat_print(const double *m, int n) { int i, j; for (i = 0; i < n; i++) for (j = 0; j < n; j++) printf(j == n - 1 ? \"%-10.2f\\n\" : \"%-10.2f \", m[i*n + j]); }采用“普通”指针作为函数参数，将二维数组的第一个元素地址传进来，在函数内部将双下标映射为线性偏移量从而访问元素。主函数调用：mat_multi(&A[0][0], &B[0][0], &R[0][0], n);例8-5：方阵相乘（线性下标版）写一个函数，使用线性下标实现 n 阶方阵相乘 R = A*B。多维数组是糖衣，一维数组是药！多维数组的本质是一维数组，因此，这才是多维数组访问的真正操作！但却不符合人的认知习惯。一般不这样写，不符合人的二维思维模式。发明二维数组，是为了方便人的理解。语法糖loc = i×N + j例8-5：方阵相乘（线性下标版）的启示实现多维数组访问效果，怎么写程序，既能符合计算机的真正操作，又能符合人的认知习惯？#include <stdio.h> #include <memory.h> #define N 1000 int* _mat; int _nrows, _ncols; int _left, _right, _up, _down; #define MAT(i, j) _mat[i * _ncols + j] char* _buf;启用宏，自己创造语法糖！语法糖：• 二维数组原来是糖衣，一维数组才是药！• 药虽苦，但治病。• 药不好吃，糖衣帮助。"
+        }
+      ],
+      "citationsValid": 4,
+      "citationsTotal": 4,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 5,
+      "question": "多维数组的元素下标和存储位置之间是什么关系？",
+      "type": "fact",
+      "expectedChunkKeys": [
+        "21:c0"
+      ],
+      "note": "21:c0 说明下标与相对起始地址的偏移量之间存在关系映射。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "21:c0",
+        "21:c1",
+        "3:c0",
+        "27:c1",
+        "14:c0"
+      ],
+      "firstTokenMs": 1341,
+      "answer": "多维数组的元素下标与存储位置（以数组元素为单位相对数组起始地址的偏移量）之间存在一个关系映射 [1]。\n\n具体来说：\n\n- 不管多少维的数组，本质都是内存中一段连续的内存空间，元素从数组的起始地址开始连续存放 [1]。\n- 对于一维数组很简单，下标即为偏移量 [1]。\n- 对于多维数组的下标，C 语言采用“行优先存储”（row-major）的规则，即优先存储最右侧下标对应的元素 [1]。\n- 在“行优先存储”规则下，一个 M×N 的二维数组元素 a[i][j] 的下标与元素位置偏移量 loc 之间的关系为：loc = i×N + j，即 a[i][j] 元素的存储地址为 &a[0][0]+loc [1]。通过这个公式，可以将二维数组的二维下标转换成相对于数组首地址的线性偏移量（以数组元素为单位），从而直接访问该元素 [1]。\n- “行优先存储”的本质是“最右边的下标变化最快（rightmost subscript varies fastest）”，即在内存中从起始地址依次遍历数组的每个元素时，相邻元素中越靠右侧的下标变化的速度越快 [1]。与之相对的是“列优先存储”（column-major）或“最左边的下标变化最快”，Fotran、Matlab 等语言采用“列优先存储” [1]。\n\n此外，资料还指出多维数组可以看成数组的数组：对于 N 维数组（N>1），可以看成是一个“一维数组”，该“一维数组”的每个元素是一个 N-1 维数组 [4]。二维数组名 a 作为表达式具有数组指针类型，a+i 指向第 i+1 行，*(a+i)+j 指向第 i+1 行数组的第 j+1 个元素，*(*(a+i)+j) 等价于 a[i][j] [4]。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 6,
+      "question": "数组指针和指针数组分别是什么？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "12:c1",
+        "25:c0"
+      ],
+      "note": "12:c1 定义数组指针，25:c0 定义指针数组，需要把两个概念放在一起比较。",
+      "status": "ok",
+      "recallHit": false,
+      "topKeys": [
+        "1:c0",
+        "2:c0",
+        "27:c1",
+        "11:c0",
+        "5:c0"
+      ],
+      "firstTokenMs": 1609,
+      "answer": "**数组指针**：本质是指针，指向一个数组（而不是指向数组元素）[7]。数组指针每次加（减）1，意味着指针位置向后（前）移动了整个数组空间的大小，指针值的变动为整个数组内存空间的字节数 [7]。数组指针解地址后，代表它所指向的数组变量，可以看作数组名，用作表达式时和数组名一样也可以隐式类型转换为指向数组首元素的指针 [7]。\n\n**指针数组**：就是元素类型为指针的数组 [4]。例如 `int *piArr[10]; char *pcArr[20]; double *pdArr[40];` 分别定义了元素类型为 int*、char* 以及 double* 的数组 [4]。指针数组可以在定义时初始化，如 `char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"};`，其中 pcArr[0] 指向字符串常量 \"I\"（准确地说，指向字符串的第一个元素）[4]。注意数组名 pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char ** [4]。\n\n**区分方法**：中文习惯将主语放最后，修饰它的定语放前面。数组指针，主语是指针，因此它的本质是指针，是指向一个数组；指针数组，主语是数组，因此它的本质是数组 [7]。",
+      "citations": [
+        {
+          "refId": 7,
+          "quote": "数组指针的本质还是指针，只不过它指向的数据实体不是单一类型，而是数组类型。",
+          "pageFrom": 14,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf",
+          "pageTo": 15,
+          "fullContext": "例8-2：数组指针的内存占用示例int a[5]; int (*pa)[5] = &a; //注意输出中 %d，%p，%X 区别printf(\"%16d - %16d = %d\\n\", pa+1, pa, (char *)(pa+1)-(char *)pa); printf(\"%16p - %16X = %d\\n\", pa+1, pa, (pa+1)-pa);程序输出 6422036 - 6422016 = 20 000000000061FE14 - 61FE00 = 1 p pa a指向数组数组指针的本质还是指针，只不过它指向的数据实体不是单一类型，而是数组类型。关于指针的所有运算都适用于它。数组指针每次加（减） 1，意味着指针位置向后（前）移动了整个数组空间的大小，指针值的变动为整个数组内存空间的字节数。\n\n数组指针解地址后，代表它所指向的数组变量，可以看作数组名，用作表达式时和数组名一样也可以隐式类型转换为指向数组首元素的指针 。double d[10] = {0}; double (*pd)[10] = &d; double *p; p = *pd;//隐式变换*(p+1) = 1.2; printf(\"%f \\n\", d[1]); //输出1.200000中文习惯将主语放最后， 修饰它的定语放前面。 数组指针， 主语是指针，因此它的本质是指针，是指向一个数组（而不是指向数组元素）。指针数组（详见第 8.5 节），主语是数组，因此它的本质是数组。按这样的方式区分，便于记忆，也便于理解。Demo1"
+        },
+        {
+          "refId": 7,
+          "quote": "数组指针每次加（减） 1，意味着指针位置向后（前）移动了整个数组空间的大小，指针值的变动为整个数组内存空间的字节数。",
+          "pageFrom": 14,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf",
+          "pageTo": 15,
+          "fullContext": "例8-2：数组指针的内存占用示例int a[5]; int (*pa)[5] = &a; //注意输出中 %d，%p，%X 区别printf(\"%16d - %16d = %d\\n\", pa+1, pa, (char *)(pa+1)-(char *)pa); printf(\"%16p - %16X = %d\\n\", pa+1, pa, (pa+1)-pa);程序输出 6422036 - 6422016 = 20 000000000061FE14 - 61FE00 = 1 p pa a指向数组数组指针的本质还是指针，只不过它指向的数据实体不是单一类型，而是数组类型。关于指针的所有运算都适用于它。数组指针每次加（减） 1，意味着指针位置向后（前）移动了整个数组空间的大小，指针值的变动为整个数组内存空间的字节数。\n\n数组指针解地址后，代表它所指向的数组变量，可以看作数组名，用作表达式时和数组名一样也可以隐式类型转换为指向数组首元素的指针 。double d[10] = {0}; double (*pd)[10] = &d; double *p; p = *pd;//隐式变换*(p+1) = 1.2; printf(\"%f \\n\", d[1]); //输出1.200000中文习惯将主语放最后， 修饰它的定语放前面。 数组指针， 主语是指针，因此它的本质是指针，是指向一个数组（而不是指向数组元素）。指针数组（详见第 8.5 节），主语是数组，因此它的本质是数组。按这样的方式区分，便于记忆，也便于理解。Demo1"
+        },
+        {
+          "refId": 7,
+          "quote": "数组指针解地址后，代表它所指向的数组变量，可以看作数组名，用作表达式时和数组名一样也可以隐式类型转换为指向数组首元素的指针 。",
+          "pageFrom": 14,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf",
+          "pageTo": 15,
+          "fullContext": "例8-2：数组指针的内存占用示例int a[5]; int (*pa)[5] = &a; //注意输出中 %d，%p，%X 区别printf(\"%16d - %16d = %d\\n\", pa+1, pa, (char *)(pa+1)-(char *)pa); printf(\"%16p - %16X = %d\\n\", pa+1, pa, (pa+1)-pa);程序输出 6422036 - 6422016 = 20 000000000061FE14 - 61FE00 = 1 p pa a指向数组数组指针的本质还是指针，只不过它指向的数据实体不是单一类型，而是数组类型。关于指针的所有运算都适用于它。数组指针每次加（减） 1，意味着指针位置向后（前）移动了整个数组空间的大小，指针值的变动为整个数组内存空间的字节数。\n\n数组指针解地址后，代表它所指向的数组变量，可以看作数组名，用作表达式时和数组名一样也可以隐式类型转换为指向数组首元素的指针 。double d[10] = {0}; double (*pd)[10] = &d; double *p; p = *pd;//隐式变换*(p+1) = 1.2; printf(\"%f \\n\", d[1]); //输出1.200000中文习惯将主语放最后， 修饰它的定语放前面。 数组指针， 主语是指针，因此它的本质是指针，是指向一个数组（而不是指向数组元素）。指针数组（详见第 8.5 节），主语是数组，因此它的本质是数组。按这样的方式区分，便于记忆，也便于理解。Demo1"
+        },
+        {
+          "refId": 4,
+          "quote": "指针数组就是元素类型为指针的数组。",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf",
+          "pageTo": 33,
+          "fullContext": "⚫ 指针数组就是元素类型为指针的数组。例如：分别定义了三个数组，数组元素类型分别是 int*， char* 以及 double*。⚫ 指针数组可以在定义时初始化，如：定义了一个长度为 4 的指针数组，其中 pcArr[0] 指向字符串常量 “I” （准确地说，指向字符串的第一个元素，后同）；pcArr[1] 指向字符串常量\"Love\" ； pcArr[2] 指向字符串常量 \"C\" ；pcArr[3] 指向字符串常量 \"Language\" 。注意数组名pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char **。int *piArr[10]; char *pcArr[20]; // 用得特别多double *pdArr[40]; char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"}; 常量区：\"I\" \"Love\" \"C\" \"Language\"数组：pcArr[0] pcArr[1] pcArr[2] pcArr[3] sizeof(piArr) is ? sizeof(pcArr) is ? sizeof(pdArr) is ? 80 160 320例 8-7 指针数组定义示例#include <stdio.h> #define LEN 23 int main() { int i; char *subjectPtr[] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; char subjectArray[][LEN] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; for (i = 0; i < 7; ++i) printf(\"%s : %s\\n\", subjectPtr[i], subjectArray[i]); return 0; }指针数组 vs 二维数组（后文详细介绍）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前直接对二维字符数组排序 利用指针数组排序和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前排序中hijklmnop qrstuvwxyz abcdefg排序前排序中直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg hijklmnop qrstuvwxyz abcdefg（交互数组） （交换指针）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。abcdefg hijklmnop qrstuvwxyz排序后hijklmnop qrstuvwxyz abcdefg排序后直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前问题分析： 定义全局数组 char a[100][1001] 保存输入的所有行。(1) 定义数组 int lens[100] 和一个指针数组 char *lines[100] 分别保存每行的长度和指向该行字符串的指针。(2) 对 lens 数组进行冒泡排序并同时相应交换 lines 中对应的指针。(3) 排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 char *lines[100];// 指向每行字符串int lens[100]; // 保存每行的长度abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens例8-8的输入、执行、输出示意#include <stdio.h> #include <string.h> char a[100][1001]; // save lines int main() { int i, j, k = 0, tmp; char *lines[100], *temptr; // pointer to each line int lens[100]; // keep line's length // while (fgets(a[k], 1001, stdin) != NULL) // read all lines，会读入换行符while(gets(a[k]) != NULL) // read all lines { lines[k] = a[k]; lens[k] = strlen(lines[k]); k++; } ……例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens for (i = 1; i < k; i++) // bubble sorting for (j = 0; j < k - i; j++) { int dicflag = (lens[j] == lens[j + 1]) && (strcmp(lines[j], lines[j + 1]) > 0); if (lens[j] > lens[j + 1] || dicflag) { tmp = lens[j]; lens[j] = lens[j + 1]; lens[j + 1] = tmp; temptr = lines[j]; lines[j] = lines[j + 1]; lines[j + 1] = temptr; } } for (i = 0; i < k; ++i) printf(\"%s\\n\",lines[i]); return 0; }请对比例8-3，说出本例的优点思考题2：按题意排序后，在从短到长的顺序输出的字符串前面先输出一个该字符串在原始数据中的行号，然后输出冒号、该行的长度、冒号，再输出对应的字符串。思考题1：参照“例8-3的优化版”，本程序如何更优雅？abcdefcd abcdefc abc a abd ac abcde lines 2 3 3 5 7 8 lens 8 7 3 3 2 5 lens 5:2:ac 3:3:abc 4:3:abd 6:5:abcde … ..\\chap8>c8-8-strsort < c8-8-strsort.c"
+        },
+        {
+          "refId": 4,
+          "quote": "int *piArr[10]; char *pcArr[20]; // 用得特别多double *pdArr[40];",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf",
+          "pageTo": 33,
+          "fullContext": "⚫ 指针数组就是元素类型为指针的数组。例如：分别定义了三个数组，数组元素类型分别是 int*， char* 以及 double*。⚫ 指针数组可以在定义时初始化，如：定义了一个长度为 4 的指针数组，其中 pcArr[0] 指向字符串常量 “I” （准确地说，指向字符串的第一个元素，后同）；pcArr[1] 指向字符串常量\"Love\" ； pcArr[2] 指向字符串常量 \"C\" ；pcArr[3] 指向字符串常量 \"Language\" 。注意数组名pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char **。int *piArr[10]; char *pcArr[20]; // 用得特别多double *pdArr[40]; char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"}; 常量区：\"I\" \"Love\" \"C\" \"Language\"数组：pcArr[0] pcArr[1] pcArr[2] pcArr[3] sizeof(piArr) is ? sizeof(pcArr) is ? sizeof(pdArr) is ? 80 160 320例 8-7 指针数组定义示例#include <stdio.h> #define LEN 23 int main() { int i; char *subjectPtr[] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; char subjectArray[][LEN] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; for (i = 0; i < 7; ++i) printf(\"%s : %s\\n\", subjectPtr[i], subjectArray[i]); return 0; }指针数组 vs 二维数组（后文详细介绍）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前直接对二维字符数组排序 利用指针数组排序和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前排序中hijklmnop qrstuvwxyz abcdefg排序前排序中直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg hijklmnop qrstuvwxyz abcdefg（交互数组） （交换指针）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。abcdefg hijklmnop qrstuvwxyz排序后hijklmnop qrstuvwxyz abcdefg排序后直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前问题分析： 定义全局数组 char a[100][1001] 保存输入的所有行。(1) 定义数组 int lens[100] 和一个指针数组 char *lines[100] 分别保存每行的长度和指向该行字符串的指针。(2) 对 lens 数组进行冒泡排序并同时相应交换 lines 中对应的指针。(3) 排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 char *lines[100];// 指向每行字符串int lens[100]; // 保存每行的长度abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens例8-8的输入、执行、输出示意#include <stdio.h> #include <string.h> char a[100][1001]; // save lines int main() { int i, j, k = 0, tmp; char *lines[100], *temptr; // pointer to each line int lens[100]; // keep line's length // while (fgets(a[k], 1001, stdin) != NULL) // read all lines，会读入换行符while(gets(a[k]) != NULL) // read all lines { lines[k] = a[k]; lens[k] = strlen(lines[k]); k++; } ……例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens for (i = 1; i < k; i++) // bubble sorting for (j = 0; j < k - i; j++) { int dicflag = (lens[j] == lens[j + 1]) && (strcmp(lines[j], lines[j + 1]) > 0); if (lens[j] > lens[j + 1] || dicflag) { tmp = lens[j]; lens[j] = lens[j + 1]; lens[j + 1] = tmp; temptr = lines[j]; lines[j] = lines[j + 1]; lines[j + 1] = temptr; } } for (i = 0; i < k; ++i) printf(\"%s\\n\",lines[i]); return 0; }请对比例8-3，说出本例的优点思考题2：按题意排序后，在从短到长的顺序输出的字符串前面先输出一个该字符串在原始数据中的行号，然后输出冒号、该行的长度、冒号，再输出对应的字符串。思考题1：参照“例8-3的优化版”，本程序如何更优雅？abcdefcd abcdefc abc a abd ac abcde lines 2 3 3 5 7 8 lens 8 7 3 3 2 5 lens 5:2:ac 3:3:abc 4:3:abd 6:5:abcde … ..\\chap8>c8-8-strsort < c8-8-strsort.c"
+        },
+        {
+          "refId": 4,
+          "quote": "char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"};",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf",
+          "pageTo": 33,
+          "fullContext": "⚫ 指针数组就是元素类型为指针的数组。例如：分别定义了三个数组，数组元素类型分别是 int*， char* 以及 double*。⚫ 指针数组可以在定义时初始化，如：定义了一个长度为 4 的指针数组，其中 pcArr[0] 指向字符串常量 “I” （准确地说，指向字符串的第一个元素，后同）；pcArr[1] 指向字符串常量\"Love\" ； pcArr[2] 指向字符串常量 \"C\" ；pcArr[3] 指向字符串常量 \"Language\" 。注意数组名pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char **。int *piArr[10]; char *pcArr[20]; // 用得特别多double *pdArr[40]; char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"}; 常量区：\"I\" \"Love\" \"C\" \"Language\"数组：pcArr[0] pcArr[1] pcArr[2] pcArr[3] sizeof(piArr) is ? sizeof(pcArr) is ? sizeof(pdArr) is ? 80 160 320例 8-7 指针数组定义示例#include <stdio.h> #define LEN 23 int main() { int i; char *subjectPtr[] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; char subjectArray[][LEN] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; for (i = 0; i < 7; ++i) printf(\"%s : %s\\n\", subjectPtr[i], subjectArray[i]); return 0; }指针数组 vs 二维数组（后文详细介绍）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前直接对二维字符数组排序 利用指针数组排序和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前排序中hijklmnop qrstuvwxyz abcdefg排序前排序中直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg hijklmnop qrstuvwxyz abcdefg（交互数组） （交换指针）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。abcdefg hijklmnop qrstuvwxyz排序后hijklmnop qrstuvwxyz abcdefg排序后直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前问题分析： 定义全局数组 char a[100][1001] 保存输入的所有行。(1) 定义数组 int lens[100] 和一个指针数组 char *lines[100] 分别保存每行的长度和指向该行字符串的指针。(2) 对 lens 数组进行冒泡排序并同时相应交换 lines 中对应的指针。(3) 排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 char *lines[100];// 指向每行字符串int lens[100]; // 保存每行的长度abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens例8-8的输入、执行、输出示意#include <stdio.h> #include <string.h> char a[100][1001]; // save lines int main() { int i, j, k = 0, tmp; char *lines[100], *temptr; // pointer to each line int lens[100]; // keep line's length // while (fgets(a[k], 1001, stdin) != NULL) // read all lines，会读入换行符while(gets(a[k]) != NULL) // read all lines { lines[k] = a[k]; lens[k] = strlen(lines[k]); k++; } ……例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens for (i = 1; i < k; i++) // bubble sorting for (j = 0; j < k - i; j++) { int dicflag = (lens[j] == lens[j + 1]) && (strcmp(lines[j], lines[j + 1]) > 0); if (lens[j] > lens[j + 1] || dicflag) { tmp = lens[j]; lens[j] = lens[j + 1]; lens[j + 1] = tmp; temptr = lines[j]; lines[j] = lines[j + 1]; lines[j + 1] = temptr; } } for (i = 0; i < k; ++i) printf(\"%s\\n\",lines[i]); return 0; }请对比例8-3，说出本例的优点思考题2：按题意排序后，在从短到长的顺序输出的字符串前面先输出一个该字符串在原始数据中的行号，然后输出冒号、该行的长度、冒号，再输出对应的字符串。思考题1：参照“例8-3的优化版”，本程序如何更优雅？abcdefcd abcdefc abc a abd ac abcde lines 2 3 3 5 7 8 lens 8 7 3 3 2 5 lens 5:2:ac 3:3:abc 4:3:abd 6:5:abcde … ..\\chap8>c8-8-strsort < c8-8-strsort.c"
+        },
+        {
+          "refId": 4,
+          "quote": "其中 pcArr[0] 指向字符串常量 “I” （准确地说，指向字符串的第一个元素，后同）",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf",
+          "pageTo": 33,
+          "fullContext": "⚫ 指针数组就是元素类型为指针的数组。例如：分别定义了三个数组，数组元素类型分别是 int*， char* 以及 double*。⚫ 指针数组可以在定义时初始化，如：定义了一个长度为 4 的指针数组，其中 pcArr[0] 指向字符串常量 “I” （准确地说，指向字符串的第一个元素，后同）；pcArr[1] 指向字符串常量\"Love\" ； pcArr[2] 指向字符串常量 \"C\" ；pcArr[3] 指向字符串常量 \"Language\" 。注意数组名pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char **。int *piArr[10]; char *pcArr[20]; // 用得特别多double *pdArr[40]; char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"}; 常量区：\"I\" \"Love\" \"C\" \"Language\"数组：pcArr[0] pcArr[1] pcArr[2] pcArr[3] sizeof(piArr) is ? sizeof(pcArr) is ? sizeof(pdArr) is ? 80 160 320例 8-7 指针数组定义示例#include <stdio.h> #define LEN 23 int main() { int i; char *subjectPtr[] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; char subjectArray[][LEN] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; for (i = 0; i < 7; ++i) printf(\"%s : %s\\n\", subjectPtr[i], subjectArray[i]); return 0; }指针数组 vs 二维数组（后文详细介绍）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前直接对二维字符数组排序 利用指针数组排序和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前排序中hijklmnop qrstuvwxyz abcdefg排序前排序中直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg hijklmnop qrstuvwxyz abcdefg（交互数组） （交换指针）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。abcdefg hijklmnop qrstuvwxyz排序后hijklmnop qrstuvwxyz abcdefg排序后直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前问题分析： 定义全局数组 char a[100][1001] 保存输入的所有行。(1) 定义数组 int lens[100] 和一个指针数组 char *lines[100] 分别保存每行的长度和指向该行字符串的指针。(2) 对 lens 数组进行冒泡排序并同时相应交换 lines 中对应的指针。(3) 排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 char *lines[100];// 指向每行字符串int lens[100]; // 保存每行的长度abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens例8-8的输入、执行、输出示意#include <stdio.h> #include <string.h> char a[100][1001]; // save lines int main() { int i, j, k = 0, tmp; char *lines[100], *temptr; // pointer to each line int lens[100]; // keep line's length // while (fgets(a[k], 1001, stdin) != NULL) // read all lines，会读入换行符while(gets(a[k]) != NULL) // read all lines { lines[k] = a[k]; lens[k] = strlen(lines[k]); k++; } ……例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens for (i = 1; i < k; i++) // bubble sorting for (j = 0; j < k - i; j++) { int dicflag = (lens[j] == lens[j + 1]) && (strcmp(lines[j], lines[j + 1]) > 0); if (lens[j] > lens[j + 1] || dicflag) { tmp = lens[j]; lens[j] = lens[j + 1]; lens[j + 1] = tmp; temptr = lines[j]; lines[j] = lines[j + 1]; lines[j + 1] = temptr; } } for (i = 0; i < k; ++i) printf(\"%s\\n\",lines[i]); return 0; }请对比例8-3，说出本例的优点思考题2：按题意排序后，在从短到长的顺序输出的字符串前面先输出一个该字符串在原始数据中的行号，然后输出冒号、该行的长度、冒号，再输出对应的字符串。思考题1：参照“例8-3的优化版”，本程序如何更优雅？abcdefcd abcdefc abc a abd ac abcde lines 2 3 3 5 7 8 lens 8 7 3 3 2 5 lens 5:2:ac 3:3:abc 4:3:abd 6:5:abcde … ..\\chap8>c8-8-strsort < c8-8-strsort.c"
+        },
+        {
+          "refId": 4,
+          "quote": "注意数组名pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char **。",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf",
+          "pageTo": 33,
+          "fullContext": "⚫ 指针数组就是元素类型为指针的数组。例如：分别定义了三个数组，数组元素类型分别是 int*， char* 以及 double*。⚫ 指针数组可以在定义时初始化，如：定义了一个长度为 4 的指针数组，其中 pcArr[0] 指向字符串常量 “I” （准确地说，指向字符串的第一个元素，后同）；pcArr[1] 指向字符串常量\"Love\" ； pcArr[2] 指向字符串常量 \"C\" ；pcArr[3] 指向字符串常量 \"Language\" 。注意数组名pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char **。int *piArr[10]; char *pcArr[20]; // 用得特别多double *pdArr[40]; char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"}; 常量区：\"I\" \"Love\" \"C\" \"Language\"数组：pcArr[0] pcArr[1] pcArr[2] pcArr[3] sizeof(piArr) is ? sizeof(pcArr) is ? sizeof(pdArr) is ? 80 160 320例 8-7 指针数组定义示例#include <stdio.h> #define LEN 23 int main() { int i; char *subjectPtr[] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; char subjectArray[][LEN] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; for (i = 0; i < 7; ++i) printf(\"%s : %s\\n\", subjectPtr[i], subjectArray[i]); return 0; }指针数组 vs 二维数组（后文详细介绍）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前直接对二维字符数组排序 利用指针数组排序和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前排序中hijklmnop qrstuvwxyz abcdefg排序前排序中直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg hijklmnop qrstuvwxyz abcdefg（交互数组） （交换指针）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。abcdefg hijklmnop qrstuvwxyz排序后hijklmnop qrstuvwxyz abcdefg排序后直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前问题分析： 定义全局数组 char a[100][1001] 保存输入的所有行。(1) 定义数组 int lens[100] 和一个指针数组 char *lines[100] 分别保存每行的长度和指向该行字符串的指针。(2) 对 lens 数组进行冒泡排序并同时相应交换 lines 中对应的指针。(3) 排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 char *lines[100];// 指向每行字符串int lens[100]; // 保存每行的长度abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens例8-8的输入、执行、输出示意#include <stdio.h> #include <string.h> char a[100][1001]; // save lines int main() { int i, j, k = 0, tmp; char *lines[100], *temptr; // pointer to each line int lens[100]; // keep line's length // while (fgets(a[k], 1001, stdin) != NULL) // read all lines，会读入换行符while(gets(a[k]) != NULL) // read all lines { lines[k] = a[k]; lens[k] = strlen(lines[k]); k++; } ……例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens for (i = 1; i < k; i++) // bubble sorting for (j = 0; j < k - i; j++) { int dicflag = (lens[j] == lens[j + 1]) && (strcmp(lines[j], lines[j + 1]) > 0); if (lens[j] > lens[j + 1] || dicflag) { tmp = lens[j]; lens[j] = lens[j + 1]; lens[j + 1] = tmp; temptr = lines[j]; lines[j] = lines[j + 1]; lines[j + 1] = temptr; } } for (i = 0; i < k; ++i) printf(\"%s\\n\",lines[i]); return 0; }请对比例8-3，说出本例的优点思考题2：按题意排序后，在从短到长的顺序输出的字符串前面先输出一个该字符串在原始数据中的行号，然后输出冒号、该行的长度、冒号，再输出对应的字符串。思考题1：参照“例8-3的优化版”，本程序如何更优雅？abcdefcd abcdefc abc a abd ac abcde lines 2 3 3 5 7 8 lens 8 7 3 3 2 5 lens 5:2:ac 3:3:abc 4:3:abd 6:5:abcde … ..\\chap8>c8-8-strsort < c8-8-strsort.c"
+        },
+        {
+          "refId": 7,
+          "quote": "中文习惯将主语放最后， 修饰它的定语放前面。 数组指针， 主语是指针，因此它的本质是指针，是指向一个数组（而不是指向数组元素）。指针数组（详见第 8.5 节），主语是数组，因此它的本质是数组。",
+          "pageFrom": 14,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.2.1 数组类型",
+          "documentTitle": "test.pdf",
+          "pageTo": 15,
+          "fullContext": "例8-2：数组指针的内存占用示例int a[5]; int (*pa)[5] = &a; //注意输出中 %d，%p，%X 区别printf(\"%16d - %16d = %d\\n\", pa+1, pa, (char *)(pa+1)-(char *)pa); printf(\"%16p - %16X = %d\\n\", pa+1, pa, (pa+1)-pa);程序输出 6422036 - 6422016 = 20 000000000061FE14 - 61FE00 = 1 p pa a指向数组数组指针的本质还是指针，只不过它指向的数据实体不是单一类型，而是数组类型。关于指针的所有运算都适用于它。数组指针每次加（减） 1，意味着指针位置向后（前）移动了整个数组空间的大小，指针值的变动为整个数组内存空间的字节数。\n\n数组指针解地址后，代表它所指向的数组变量，可以看作数组名，用作表达式时和数组名一样也可以隐式类型转换为指向数组首元素的指针 。double d[10] = {0}; double (*pd)[10] = &d; double *p; p = *pd;//隐式变换*(p+1) = 1.2; printf(\"%f \\n\", d[1]); //输出1.200000中文习惯将主语放最后， 修饰它的定语放前面。 数组指针， 主语是指针，因此它的本质是指针，是指向一个数组（而不是指向数组元素）。指针数组（详见第 8.5 节），主语是数组，因此它的本质是数组。按这样的方式区分，便于记忆，也便于理解。Demo1"
+        }
+      ],
+      "citationsValid": 9,
+      "citationsTotal": 9,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 7,
+      "question": "函数指针为什么能让排序算法变得通用？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "33:c1",
+        "34:c0"
+      ],
+      "note": "33:c1 说明函数指针把算法流程和具体动作分离，34:c0 给出通用冒泡排序框架。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "33:c1",
+        "34:c0",
+        "38:c1",
+        "33:c2",
+        "44:c0"
+      ],
+      "firstTokenMs": 1930,
+      "answer": "函数指针能让排序算法变得通用的原因，资料中的说法如下：\n\n**1. 把算法流程和具体动作分离，形成通用框架**\n\n资料指出，函数指针的主要用途是\"将算法流程和其中某些具体实施动作分离，设计出通用、可扩展、可重用的计算框架，在计算框架下具体的函数动作由函数指针传递进来\"；并且\"计算框架是静态的，每一个计算框架的算法是确定的……函数指针是动态的，它可以在计算框架调用时指向不同的函数实体来完成具体的动作\" [3]。\n\n**2. 排序算法逻辑固定，只有\"顺序的定义\"需要变化**\n\n资料以排序为例说明：\"每种排序算法逻辑固定，是一个计算框架……其核心的流程确定，不因排序对象是谁而改变。但是排序对象的类型有多种……不用考虑数据类型，只要给出顺序的定义，就可以对任意类型的数据进行排序\"，并指出\"为每一种数据类型去实现特定的排序算法很臃肿、不优雅\"，目标是\"一种排序算法写一个函数，解决所有类型数据的排序\" [3]。\n\n**3. 通用冒泡排序的具体做法：void\\* 接口 + 函数指针比较 + 逐字节交换**\n\n- 因为\"数组类型不确定，因此采用通用型指针 void* 作为函数接口\"，函数原型中 cmp 是函数指针，指向比较函数 [1]。\n- 比较函数\"需要用户写，体现动态性\" [1]。\n- 元素交换也不能用赋值运算，需用通用函数 swap_elem \"通过强制类型转换，将每个字节重新解释成 char 型并交换内容\" [1]。\n- 在框架中，\"if 语句是通过函数指针调用比较函数来判断元素 j 和元素 j+1 是否有序……cmp 是函数指针，其指向的实体将在函数调用时确定\" [1]。\n\n**4. 实际效果：主框架不用改，只重写比较函数**\n\n资料总结：\"排序算法主框架 g_bub_sort 不用做任何修改，用户只需根据待排序的数据类型、排序目标（升序或降序）重写比较函数即可\" [6]。例如对字符数组 a 升序用 less、对实数数组 b 降序用 greater，都调用同一个 g_bub_sort [6]。\n\n**需要注意的一处不一致：** 关于 cmp 返回值的约定，通用冒泡排序中\"如果 e1 指向的元素排在 e2 指向元素的前面，返回 1，否则返回 0\" [1]；而库函数 qsort 的 cmp \"返回负数、正数和0，分别表示第一个参数先于、后于和等于第二个参数\"，资料明确提醒\"注意与例 8-12 通用冒泡排序函数中 cmp 函数的返回值含义的约定不同！！！\" [4]。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 8,
+      "question": "用指针数组给字符串排序为什么比直接交换字符串更高效？",
+      "type": "cross",
+      "expectedChunkKeys": [
+        "25:c2",
+        "25:c4"
+      ],
+      "note": "25:c2 用指针数组做索引避免整行搬移，25:c4 说明排序后原始数据没有变化。",
+      "status": "ok",
+      "recallHit": true,
+      "topKeys": [
+        "34:c2",
+        "25:c4",
+        "22:c1",
+        "25:c5",
+        "25:c3"
+      ],
+      "firstTokenMs": 1170,
+      "answer": "用指针数组给字符串排序比直接交换字符串更高效，原因在资料中有明确说明：\n\n**1. 直接交换字符串需要整体复制数据，代价大**\n\n资料指出，直接对二维字符数组排序时，元素交换环节需要进行三次字符串的整体数据复制，效率较低 [8]。资料还提到，在文字处理程序中，对各行位置的交换、整行内容的删除和新行的添加是频繁进行的操作，\"计算代价很大\" [1]。\n\n**2. 指针数组排序只交换指针，原始数据不变**\n\n使用指针数组时，排序过程中交换的是指针的指向，而不是字符串内容本身。例8-8中，对 lens 数组进行冒泡排序并\"同时相应交换 lines 中对应的指针\"，排序结束后\"数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）\" [1]。资料图示也对比了\"直接对二维字符数组排序（交换数组）\"与\"利用指针数组排序（交换指针）\"两种方式 [1]。\n\n**3. 用索引数组排序可避免大量内存交换**\n\n资料在 qsort 版中总结：\"qsort 不一定要对原始数组内容进行排序，因为原始数组的元素可能会很大，内存交换内容过多会导致效率低下。通过对原始数组内容的索引数组进行排序，可以非常有效地提高排序效率\" [4]。\n\n综上，指针数组排序高效的核心原因是：交换指针（小数据）代替交换字符串内容（大数据），避免了大量内存复制 [1][4][8]。",
+      "citations": [
+        {
+          "refId": 1,
+          "quote": "为提高程序的运行速度，往往使用指针数组作为实际数据的索引。",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf",
+          "pageTo": 33,
+          "fullContext": "⚫ 指针数组就是元素类型为指针的数组。例如：分别定义了三个数组，数组元素类型分别是 int*， char* 以及 double*。⚫ 指针数组可以在定义时初始化，如：定义了一个长度为 4 的指针数组，其中 pcArr[0] 指向字符串常量 “I” （准确地说，指向字符串的第一个元素，后同）；pcArr[1] 指向字符串常量\"Love\" ； pcArr[2] 指向字符串常量 \"C\" ；pcArr[3] 指向字符串常量 \"Language\" 。注意数组名pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char **。int *piArr[10]; char *pcArr[20]; // 用得特别多double *pdArr[40]; char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"}; 常量区：\"I\" \"Love\" \"C\" \"Language\"数组：pcArr[0] pcArr[1] pcArr[2] pcArr[3] sizeof(piArr) is ? sizeof(pcArr) is ? sizeof(pdArr) is ? 80 160 320例 8-7 指针数组定义示例#include <stdio.h> #define LEN 23 int main() { int i; char *subjectPtr[] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; char subjectArray[][LEN] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; for (i = 0; i < 7; ++i) printf(\"%s : %s\\n\", subjectPtr[i], subjectArray[i]); return 0; }指针数组 vs 二维数组（后文详细介绍）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前直接对二维字符数组排序 利用指针数组排序和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前排序中hijklmnop qrstuvwxyz abcdefg排序前排序中直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg hijklmnop qrstuvwxyz abcdefg（交互数组） （交换指针）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。abcdefg hijklmnop qrstuvwxyz排序后hijklmnop qrstuvwxyz abcdefg排序后直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前问题分析： 定义全局数组 char a[100][1001] 保存输入的所有行。(1) 定义数组 int lens[100] 和一个指针数组 char *lines[100] 分别保存每行的长度和指向该行字符串的指针。(2) 对 lens 数组进行冒泡排序并同时相应交换 lines 中对应的指针。(3) 排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 char *lines[100];// 指向每行字符串int lens[100]; // 保存每行的长度abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens例8-8的输入、执行、输出示意#include <stdio.h> #include <string.h> char a[100][1001]; // save lines int main() { int i, j, k = 0, tmp; char *lines[100], *temptr; // pointer to each line int lens[100]; // keep line's length // while (fgets(a[k], 1001, stdin) != NULL) // read all lines，会读入换行符while(gets(a[k]) != NULL) // read all lines { lines[k] = a[k]; lens[k] = strlen(lines[k]); k++; } ……例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens for (i = 1; i < k; i++) // bubble sorting for (j = 0; j < k - i; j++) { int dicflag = (lens[j] == lens[j + 1]) && (strcmp(lines[j], lines[j + 1]) > 0); if (lens[j] > lens[j + 1] || dicflag) { tmp = lens[j]; lens[j] = lens[j + 1]; lens[j + 1] = tmp; temptr = lines[j]; lines[j] = lines[j + 1]; lines[j + 1] = temptr; } } for (i = 0; i < k; ++i) printf(\"%s\\n\",lines[i]); return 0; }请对比例8-3，说出本例的优点思考题2：按题意排序后，在从短到长的顺序输出的字符串前面先输出一个该字符串在原始数据中的行号，然后输出冒号、该行的长度、冒号，再输出对应的字符串。思考题1：参照“例8-3的优化版”，本程序如何更优雅？abcdefcd abcdefc abc a abd ac abcde lines 2 3 3 5 7 8 lens 8 7 3 3 2 5 lens 5:2:ac 3:3:abc 4:3:abd 6:5:abcde … ..\\chap8>c8-8-strsort < c8-8-strsort.c"
+        },
+        {
+          "refId": 1,
+          "quote": "对 lens 数组进行冒泡排序并同时相应交换 lines 中对应的指针。",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf",
+          "pageTo": 33,
+          "fullContext": "⚫ 指针数组就是元素类型为指针的数组。例如：分别定义了三个数组，数组元素类型分别是 int*， char* 以及 double*。⚫ 指针数组可以在定义时初始化，如：定义了一个长度为 4 的指针数组，其中 pcArr[0] 指向字符串常量 “I” （准确地说，指向字符串的第一个元素，后同）；pcArr[1] 指向字符串常量\"Love\" ； pcArr[2] 指向字符串常量 \"C\" ；pcArr[3] 指向字符串常量 \"Language\" 。注意数组名pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char **。int *piArr[10]; char *pcArr[20]; // 用得特别多double *pdArr[40]; char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"}; 常量区：\"I\" \"Love\" \"C\" \"Language\"数组：pcArr[0] pcArr[1] pcArr[2] pcArr[3] sizeof(piArr) is ? sizeof(pcArr) is ? sizeof(pdArr) is ? 80 160 320例 8-7 指针数组定义示例#include <stdio.h> #define LEN 23 int main() { int i; char *subjectPtr[] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; char subjectArray[][LEN] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; for (i = 0; i < 7; ++i) printf(\"%s : %s\\n\", subjectPtr[i], subjectArray[i]); return 0; }指针数组 vs 二维数组（后文详细介绍）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前直接对二维字符数组排序 利用指针数组排序和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前排序中hijklmnop qrstuvwxyz abcdefg排序前排序中直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg hijklmnop qrstuvwxyz abcdefg（交互数组） （交换指针）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。abcdefg hijklmnop qrstuvwxyz排序后hijklmnop qrstuvwxyz abcdefg排序后直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前问题分析： 定义全局数组 char a[100][1001] 保存输入的所有行。(1) 定义数组 int lens[100] 和一个指针数组 char *lines[100] 分别保存每行的长度和指向该行字符串的指针。(2) 对 lens 数组进行冒泡排序并同时相应交换 lines 中对应的指针。(3) 排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 char *lines[100];// 指向每行字符串int lens[100]; // 保存每行的长度abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens例8-8的输入、执行、输出示意#include <stdio.h> #include <string.h> char a[100][1001]; // save lines int main() { int i, j, k = 0, tmp; char *lines[100], *temptr; // pointer to each line int lens[100]; // keep line's length // while (fgets(a[k], 1001, stdin) != NULL) // read all lines，会读入换行符while(gets(a[k]) != NULL) // read all lines { lines[k] = a[k]; lens[k] = strlen(lines[k]); k++; } ……例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens for (i = 1; i < k; i++) // bubble sorting for (j = 0; j < k - i; j++) { int dicflag = (lens[j] == lens[j + 1]) && (strcmp(lines[j], lines[j + 1]) > 0); if (lens[j] > lens[j + 1] || dicflag) { tmp = lens[j]; lens[j] = lens[j + 1]; lens[j + 1] = tmp; temptr = lines[j]; lines[j] = lines[j + 1]; lines[j + 1] = temptr; } } for (i = 0; i < k; ++i) printf(\"%s\\n\",lines[i]); return 0; }请对比例8-3，说出本例的优点思考题2：按题意排序后，在从短到长的顺序输出的字符串前面先输出一个该字符串在原始数据中的行号，然后输出冒号、该行的长度、冒号，再输出对应的字符串。思考题1：参照“例8-3的优化版”，本程序如何更优雅？abcdefcd abcdefc abc a abd ac abcde lines 2 3 3 5 7 8 lens 8 7 3 3 2 5 lens 5:2:ac 3:3:abc 4:3:abd 6:5:abcde … ..\\chap8>c8-8-strsort < c8-8-strsort.c"
+        },
+        {
+          "refId": 1,
+          "quote": "排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf",
+          "pageTo": 33,
+          "fullContext": "⚫ 指针数组就是元素类型为指针的数组。例如：分别定义了三个数组，数组元素类型分别是 int*， char* 以及 double*。⚫ 指针数组可以在定义时初始化，如：定义了一个长度为 4 的指针数组，其中 pcArr[0] 指向字符串常量 “I” （准确地说，指向字符串的第一个元素，后同）；pcArr[1] 指向字符串常量\"Love\" ； pcArr[2] 指向字符串常量 \"C\" ；pcArr[3] 指向字符串常量 \"Language\" 。注意数组名pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char **。int *piArr[10]; char *pcArr[20]; // 用得特别多double *pdArr[40]; char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"}; 常量区：\"I\" \"Love\" \"C\" \"Language\"数组：pcArr[0] pcArr[1] pcArr[2] pcArr[3] sizeof(piArr) is ? sizeof(pcArr) is ? sizeof(pdArr) is ? 80 160 320例 8-7 指针数组定义示例#include <stdio.h> #define LEN 23 int main() { int i; char *subjectPtr[] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; char subjectArray[][LEN] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; for (i = 0; i < 7; ++i) printf(\"%s : %s\\n\", subjectPtr[i], subjectArray[i]); return 0; }指针数组 vs 二维数组（后文详细介绍）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前直接对二维字符数组排序 利用指针数组排序和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前排序中hijklmnop qrstuvwxyz abcdefg排序前排序中直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg hijklmnop qrstuvwxyz abcdefg（交互数组） （交换指针）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。abcdefg hijklmnop qrstuvwxyz排序后hijklmnop qrstuvwxyz abcdefg排序后直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前问题分析： 定义全局数组 char a[100][1001] 保存输入的所有行。(1) 定义数组 int lens[100] 和一个指针数组 char *lines[100] 分别保存每行的长度和指向该行字符串的指针。(2) 对 lens 数组进行冒泡排序并同时相应交换 lines 中对应的指针。(3) 排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 char *lines[100];// 指向每行字符串int lens[100]; // 保存每行的长度abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens例8-8的输入、执行、输出示意#include <stdio.h> #include <string.h> char a[100][1001]; // save lines int main() { int i, j, k = 0, tmp; char *lines[100], *temptr; // pointer to each line int lens[100]; // keep line's length // while (fgets(a[k], 1001, stdin) != NULL) // read all lines，会读入换行符while(gets(a[k]) != NULL) // read all lines { lines[k] = a[k]; lens[k] = strlen(lines[k]); k++; } ……例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens for (i = 1; i < k; i++) // bubble sorting for (j = 0; j < k - i; j++) { int dicflag = (lens[j] == lens[j + 1]) && (strcmp(lines[j], lines[j + 1]) > 0); if (lens[j] > lens[j + 1] || dicflag) { tmp = lens[j]; lens[j] = lens[j + 1]; lens[j + 1] = tmp; temptr = lines[j]; lines[j] = lines[j + 1]; lines[j + 1] = temptr; } } for (i = 0; i < k; ++i) printf(\"%s\\n\",lines[i]); return 0; }请对比例8-3，说出本例的优点思考题2：按题意排序后，在从短到长的顺序输出的字符串前面先输出一个该字符串在原始数据中的行号，然后输出冒号、该行的长度、冒号，再输出对应的字符串。思考题1：参照“例8-3的优化版”，本程序如何更优雅？abcdefcd abcdefc abc a abd ac abcde lines 2 3 3 5 7 8 lens 8 7 3 3 2 5 lens 5:2:ac 3:3:abc 4:3:abd 6:5:abcde … ..\\chap8>c8-8-strsort < c8-8-strsort.c"
+        },
+        {
+          "refId": 1,
+          "quote": "直接对二维字符数组排序 利用指针数组排序",
+          "pageFrom": 33,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.5.1 指针数组",
+          "documentTitle": "test.pdf",
+          "pageTo": 33,
+          "fullContext": "⚫ 指针数组就是元素类型为指针的数组。例如：分别定义了三个数组，数组元素类型分别是 int*， char* 以及 double*。⚫ 指针数组可以在定义时初始化，如：定义了一个长度为 4 的指针数组，其中 pcArr[0] 指向字符串常量 “I” （准确地说，指向字符串的第一个元素，后同）；pcArr[1] 指向字符串常量\"Love\" ； pcArr[2] 指向字符串常量 \"C\" ；pcArr[3] 指向字符串常量 \"Language\" 。注意数组名pcArr 作为表达式时可看作指向首元素的指针，即它具有二重指针类型 char **。int *piArr[10]; char *pcArr[20]; // 用得特别多double *pdArr[40]; char *pcArr[] = {\"I\", \"Love\", \"C\", \"Language\"}; 常量区：\"I\" \"Love\" \"C\" \"Language\"数组：pcArr[0] pcArr[1] pcArr[2] pcArr[3] sizeof(piArr) is ? sizeof(pcArr) is ? sizeof(pdArr) is ? 80 160 320例 8-7 指针数组定义示例#include <stdio.h> #define LEN 23 int main() { int i; char *subjectPtr[] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; char subjectArray[][LEN] = { \"biology\", \"english\", \"history\", \"law\", \"mechanical engineering\", \"medicine\", \"physics\" }; for (i = 0; i < 7; ++i) printf(\"%s : %s\\n\", subjectPtr[i], subjectArray[i]); return 0; }指针数组 vs 二维数组（后文详细介绍）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前直接对二维字符数组排序 利用指针数组排序和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。hijklmnop qrstuvwxyz abcdefg排序前排序中hijklmnop qrstuvwxyz abcdefg排序前排序中直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg hijklmnop qrstuvwxyz abcdefg（交互数组） （交换指针）和排序等操作的速度。⚫ 在一些文字处理程序中，数据一般以“行”为单位保存在二维数组中，在数据处理的过程中，对各行位置的交换，以及整行内容的删除和新行的添加是频繁进行的操作（计算代价很大）。为提高程序的运行速度，往往使用指针数组作为实际数据的索引。abcdefg hijklmnop qrstuvwxyz排序后hijklmnop qrstuvwxyz abcdefg排序后直接对二维字符数组排序 利用指针数组排序hijklmnop qrstuvwxyz abcdefg排序前hijklmnop qrstuvwxyz abcdefg排序前问题分析： 定义全局数组 char a[100][1001] 保存输入的所有行。(1) 定义数组 int lens[100] 和一个指针数组 char *lines[100] 分别保存每行的长度和指向该行字符串的指针。(2) 对 lens 数组进行冒泡排序并同时相应交换 lines 中对应的指针。(3) 排序结束后数组 lines 依序指向数组 a 中从短到长的各个字符串，但原始数据没有发生改变（没有对数组 a 进行写操作）。例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 char *lines[100];// 指向每行字符串int lens[100]; // 保存每行的长度abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens例8-8的输入、执行、输出示意#include <stdio.h> #include <string.h> char a[100][1001]; // save lines int main() { int i, j, k = 0, tmp; char *lines[100], *temptr; // pointer to each line int lens[100]; // keep line's length // while (fgets(a[k], 1001, stdin) != NULL) // read all lines，会读入换行符while(gets(a[k]) != NULL) // read all lines { lines[k] = a[k]; lens[k] = strlen(lines[k]); k++; } ……例8-8：按字符串长度排序（指针数组版） 题意见例 8-3 abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens for (i = 1; i < k; i++) // bubble sorting for (j = 0; j < k - i; j++) { int dicflag = (lens[j] == lens[j + 1]) && (strcmp(lines[j], lines[j + 1]) > 0); if (lens[j] > lens[j + 1] || dicflag) { tmp = lens[j]; lens[j] = lens[j + 1]; lens[j + 1] = tmp; temptr = lines[j]; lines[j] = lines[j + 1]; lines[j + 1] = temptr; } } for (i = 0; i < k; ++i) printf(\"%s\\n\",lines[i]); return 0; }请对比例8-3，说出本例的优点思考题2：按题意排序后，在从短到长的顺序输出的字符串前面先输出一个该字符串在原始数据中的行号，然后输出冒号、该行的长度、冒号，再输出对应的字符串。思考题1：参照“例8-3的优化版”，本程序如何更优雅？abcdefcd abcdefc abc a abd ac abcde lines 2 3 3 5 7 8 lens 8 7 3 3 2 5 lens 5:2:ac 3:3:abc 4:3:abd 6:5:abcde … ..\\chap8>c8-8-strsort < c8-8-strsort.c"
+        },
+        {
+          "refId": 4,
+          "quote": "qsort 不一定要对原始数组内容进行排序，因为原始数组的元素可能会很大，内存交换内容过多会导致效率低下。 通过对原始数组内容的索引数组进行排序，可以非常有效地提高排序效率。",
+          "pageFrom": 74,
+          "headingPath": "9.1}, {3.5, 3.0}, {3.0, 7.0}, {3.5, 2.0}};",
+          "documentTitle": "test.pdf",
+          "pageTo": 74,
+          "fullContext": "例8-14：按字符串长度排序（qsort 版）题意见例8-3。例8-8的实现：用冒泡排序，使用指针数组lines（注意图中lines跟例8-14的lines含义不一样），存储每行的指针，依据字符串长度进行排序（对lens排序），然后同步调整lines的指向（指针值改变）。abcdefcd abcdefc abc a abd ac abcde lines 8 7 3 3 2 5 lens abcdefcd abcdefc abc a abd ac abcde lines 2 3 3 5 7 8 lens abcdefcd abcdefc abc a abd ac abcde 0 1 2 3 4 5 lines abcdefcd abcdefc abc a abd ac abcde 4 2 3 5 1 0 lines分析：用全局数组 int lines[ ] 保存每行的行号，对数组 lines 进行“排序”（用lines值【行号】对应的字符串的长度为排序关键字，长度相等时按字符的字典序，如行4\"ac\"最短，把行“4”排到lines[0]中）。最后依次输出 lines 所对应的原始字符串，即，lines[0]=4的长度最短，先输出 a[lines[0]]，然后 a[lines[1]]，…例8-3的输入、执行、输出示意int cmp(const void *e1, const void *e2) { int i = *((int *) e1), j = *((int *) e2);//get line number int iLen = strlen(array[i]); int jLen = strlen(array[j]); if (iLen > jLen || iLen == jLen && strcmp(array[i], array[j]) > 0) return 1; if (iLen < jLen || iLen == jLen && strcmp(array[i], array[j]) < 0) return -1; return 0; } e1和e2指向的是行号长度长，或者长度一样时字典序大的往后排，返回1例8-14：按字符串长度排序（qsort 版）abcdefcd abcdefc abc a abd ac abcde 0 1 2 3 4 5 lines abcdefcd abcdefc abc a abd ac abcde 4 2 3 5 1 0 lines … char array[100][1001]; int lines[100]; // line number int cmp(const void *e1, const void *e2) {…} int main() { int i, k = 0; //while(fgets(array[k], 1001, stdin) != NULL) while(gets(array[k]) != NULL) { lines[k] = k;//record line number k++; } qsort(lines, k, sizeof(int), cmp); for (i = 0; i < k; ++i) // fputs(array[lines[i]], stdout); printf(\"%s\\n\", array[lines[i]]); return 0; } qsort后，lines里的行号按题意顺序对应字符串根据lines里的有序行号，检索array（在上图中示意的数组是a）输出对应的字符串qsort 不一定要对原始数组内容进行排序，因为原始数组的元素可能会很大，内存交换内容过多会导致效率低下。 通过对原始数组内容的索引数组进行排序，可以非常有效地提高排序效率。例8-14：按字符串长度排序（qsort 版） abcdefcd abcdefc abc a abd ac abcde 0 1 2 3 4 5 lines abcdefcd abcdefc abc a abd ac abcde 4 2 3 5 1 0 lines #include <stdio.h> #include <string.h> #include <stdlib.h> char array[100][1002]; int lines[100]; // line number int cmp(const void *e1, const void *e2) { int i = *((int *) e1), j = *((int *) e2);//get line nu int iLen = strlen(array[i]); int jLen = strlen(array[j]); return -1; return 0; } int main() { int i, k = 0; while(fgets(array[k], 1000, stdin) != NULL) { lines[k] = k;//record line number k++; } qsort(lines, k, sizeof(int), cmp); for (i = 0; i < k; ++i) fputs(array[lines[i]], stdout); return 0; }例8-14的运行示例：{ { } } { } int main() k++; return 0; return -1; return 0; return 1; int i, k = 0; #include <stdio.h> #include <stdlib.h> #include <string.h> char array[100][1001]; for (i = 0; i < k; ++i) int lines[100]; // line number int iLen = strlen(array[i]); int jLen = strlen(array[j]); int cmp(const int *e1, const int *e2) qsort(lines, k, sizeof(int), cmp); fputs(array[lines[i]], stdout); if(strcmp(array[i], array[j]) == 0) lines[k] = k;//record line number int i = *e1, j = *e2;//get line number while(fgets(array[k], 1001, stdin) != NULL) if (iLen > jLen || iLen == jLen && strcmp(array[i], array[j]) > 0) ..\\example\\chap8>c8-14-strsort-qsort < c8-14-strsort-qsort.c程序员的快乐：自己创造的程序C.c，先把C.c自身来检视⚫ key: 指向待查数据的指针；⚫ base: 指向所要查找的数组的开始地址（不一定是数组的首地址，可以从任意一个位置开始查找）；⚫ num: 数组中元素（查找单元）的个数；⚫ wid: 每一个元素（查找单元）所占用的字节数；⚫ cmp: 指向比较函数的指针，规则与 qsort 相同；⚫ 当 base 所指向的数组中有与 key 所指向的数据相等的元素时（在 cmp 函数规则下两者相等，cmp返回0），bsearch() 返回该元素的地址，否则 bsearch() 返回NULL；⚫ 数组必须根据 cmp 规则是有序的。（2） bsearch() 函数（标准库函数）void *bsearch (const void *key, const void *base, size_t num, size_t wid, int (*cmp) (const void *e1, const void *e2));包含头文件<stdlib.h>"
+        },
+        {
+          "refId": 8,
+          "quote": "本例中，冒泡排序的元素交换环节需要进行三次字符串的整体数据复制，效率较低。",
+          "pageFrom": 20,
+          "headingPath": "2. 可以通过“指针+偏移量”的方式访问数组的各个元素。 > 8.3.1 二维数组的深入理解…",
+          "documentTitle": "test.pdf",
+          "pageTo": 20,
+          "fullContext": "char a[100][1001]; // save lines int main() { int i, j, k = 0; char tmp[1002]; while(fgets(a[k++], 1001, stdin) != NULL); // read all lines for (i = 1; i < k; i++) // bubble sorting for (j = 0; j < k - i; j++) { int dicflag = strlen(a[j]) == strlen(a[j+1]) && strcmp(a[j], a[j+1]) > 0; if (strlen(a[j]) > strlen(a[j+1]) || dicflag) { strcpy(tmp, a[j]); strcpy(a[j], a[j+1]); strcpy(a[j+1], tmp); } } for (i = 0; i < k; ++i) fputs(a[i], stdout); return 0; }本例中，冒泡排序的元素交换环节需要进行三次字符串的整体数据复制，效率较低。后文将给出更高效的算法。这种写法要避免（优先级迷惑就已让人头疼），宁可多写几行条件应该彻底分离，不要留尾巴swap不妨写成函数while(gets(a[k++]) != NULL); // hint: fgets可能用不好，对付// OJ编程时，用gets更方便（注意// 数组开得大些，不要越界访问即可）int dicflag = strlen(a[j]) == strlen(a[j+1]) && strcmp(a[j], a[j+1]) > 0; if (strlen(a[j]) > strlen(a[j+1]) || dicflag) { strcpy(tmp, a[j]); strcpy(a[j], a[j+1]); strcpy(a[j+1], tmp); } if (checkSwap(a[j], a[j+1])) swap(a[j], a[j+1]); // … void swap(char *pa, char *pb) { char tmp[1002]; strcpy(tmp, pa); strcpy(pa, pb); strcpy(pb, tmp); } int checkSwap(const char *s1, const char *s2) { int len1 = strlen(s1); int len2 = strlen(s2); if(len1 > len2) return 1; if(len1 == len2) return strcmp(s1, s2) > 0; return 0; }这样写的程序才优美！例8-3的优雅版二维数组作为函数参数时，函数声明表示函数 F 接受一个 int [4][5]的二维数组作为参数。注意上述函数声明中 a 的行数 4 可以不用指定（编译器会忽略），但列数 5 必须要指定，可以写成：根据数组指针的含义，上述函数声明其实等价于形式参数 a 的本质是一个指向 int [5]类型的数组指针，这就是为什么列数不能省略的原因，因为数组指针需要数组长度这个信息。当函数调用时，只要实际二维数组的元素类型和列数符合函数中的声明，就可以将该二维数组名作为实际参数传给函数 F，在函数体内部通过a[i][ j]就可以访问实际参数二维数组的各个元素。void F(int a[4][5]); void F(int a[][5]); void F(int (*a)[5]); #include <stdio.h> void mat_multi(const double (*m1)[4], const double (*m2)[4], double (*m3)[4]); void mat_print(const double (*c)[4]); int main() { double m1[4][4] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}; double m2[4][4] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}; double m3[4][4]; mat_multi(m1, m2, m3); mat_print(m3); return 0; }输出 90.00 100.00 110.00 120.00"
+        }
+      ],
+      "citationsValid": 6,
+      "citationsTotal": 6,
+      "refusalHit": null,
+      "error": null
+    },
+    {
+      "id": 9,
+      "question": "这本书里有没有讲 Rust 的所有权机制？",
+      "type": "absent",
+      "expectedChunkKeys": [],
+      "note": "全书没有 Rust 内容，正确行为是拒答并说明知识库里没有找到。",
+      "status": "ok",
+      "recallHit": null,
+      "topKeys": [],
+      "firstTokenMs": 1986,
+      "answer": "知识库里没有找到相关内容。\n\n提供的资料只涉及 C 语言的函数指针、qsort、通用冒泡排序、指针与数组、命令行参数等内容 [1][2][4][8]，没有任何关于 Rust 或所有权机制的片段。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": true,
+      "error": null
+    },
+    {
+      "id": 10,
+      "question": "书里有没有介绍 Python 的 GIL？",
+      "type": "absent",
+      "expectedChunkKeys": [],
+      "note": "全书没有 Python GIL 内容，正确行为是拒答。",
+      "status": "ok",
+      "recallHit": null,
+      "topKeys": [],
+      "firstTokenMs": 1248,
+      "answer": "知识库里没有找到相关内容。",
+      "citations": [],
+      "citationsValid": 0,
+      "citationsTotal": 0,
+      "refusalHit": true,
+      "error": null
+    }
+  ]
+}

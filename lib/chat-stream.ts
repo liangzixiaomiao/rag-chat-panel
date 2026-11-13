@@ -1,9 +1,17 @@
 // 客户端 SSE 解析：只用 fetch + TextDecoder，按 /api/chat 的帧格式拆包。
+import type { CommandName } from '@/lib/commands';
 import type { Citation } from '@/lib/types';
 
 export interface ChatStreamRequest {
   question: string;
-  documentId: string;
+  /** 不传按 current 处理；all 时 documentId 可省略 */
+  scope?: 'current' | 'all';
+  documentId?: string;
+  /** 斜杠指令；不传就是普通问答 */
+  command?: CommandName;
+  commandArgs?: string[];
+  /** /explain 用：用户选中的原文，直接当上下文，不做检索 */
+  selectedText?: string;
   history?: { role: 'user' | 'assistant'; content: string }[];
 }
 

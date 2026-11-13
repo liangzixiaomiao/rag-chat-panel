@@ -24,6 +24,7 @@ export interface Chunk {
 export interface Retrieved {
   chunkId: number;
   documentId: string;
+  documentTitle: string;
   content: string;
   fullContext: string;
   headingPath: string | null;
@@ -38,6 +39,7 @@ export interface Citation {
   quote: string;
   pageFrom: number;
   headingPath: string | null;
+  documentTitle: string;
 }
 
 export interface ChatAnswer {

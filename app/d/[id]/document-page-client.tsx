@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import ChatPanel from '@/components/chat-panel';
 import CitationDrawer from '@/components/citation-drawer';
+import ScopeSwitcher from '@/components/scope-switcher';
 import type { CitationDetail } from '@/lib/chat-stream';
 
 interface DocumentInfo {
@@ -67,6 +68,8 @@ export default function DocumentPageClient() {
 
   return (
     <main style={{ padding: 16, maxWidth: 860, fontFamily: 'monospace', fontSize: 14, lineHeight: 1.6 }}>
+      <ScopeSwitcher scope="current" documentId={documentId === '' ? null : documentId} />
+
       <header style={{ borderBottom: '1px solid #ddd', paddingBottom: 8, marginBottom: 12 }}>
         {loading && <p style={{ margin: 0 }}>加载文档…</p>}
 
@@ -95,7 +98,8 @@ export default function DocumentPageClient() {
 
       {doc !== null && (
         <ChatPanel
-          documentId={documentId}
+          documentId={documentId === '' ? null : documentId}
+          scope="current"
           canAsk={canAsk}
           disabledReason={disabledReason}
           onCitationOpen={setCitation}

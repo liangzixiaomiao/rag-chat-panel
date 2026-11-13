@@ -16,9 +16,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - Next.js 16（App Router、TypeScript、无 src 目录、路径别名 `@/*`）
 - Tailwind CSS v4 + shadcn/ui（组件落盘在 `components/ui`）
-- `@supabase/supabase-js`：Postgres + pgvector，负责存储与向量检索
 - `unpdf`：PDF 文本抽取；`mammoth`：DOCX 文本抽取
-- `ai`：LLM 调用与流式输出
+- LLM 调用与流式输出：原生 `fetch` + 手写 SSE（不引入 `ai` 库）
 - `zod`：运行时校验
 - `better-sqlite3` + `sqlite-vec`：仅方案 B 的本地向量库
 

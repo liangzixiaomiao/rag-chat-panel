@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 const POLL_INTERVAL_MS = 1500;
+const MAX_POLL_COUNT = 100;
 
 const STATUS_LABELS: Record<string, string> = {
   pending: '待处理',
@@ -35,8 +36,22 @@ export default function UploadProgress({ documentId }: UploadProgressProps) {
   useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
+    let pollCount = 0;
+
+    function scheduleNext(): void {
+      if (pollCount >= MAX_POLL_COUNT) {
+        setPollError(`已连续轮询 ${MAX_POLL_COUNT} 次仍未完成，已停止`);
+        return;
+      }
+      timer = setTimeout(() => {
+        void poll();
+      }, POLL_INTERVAL_MS);
+    }
 
     async function poll(): Promise<void> {
+      if (cancelled) return;
+      pollCount += 1;
+
       try {
         const response = await fetch(`/api/documents/${encodeURIComponent(documentId)}`);
         const raw = await response.text();
@@ -49,16 +64,12 @@ export default function UploadProgress({ documentId }: UploadProgressProps) {
         setPollError('');
 
         if (data.status !== 'ready' && data.status !== 'failed') {
-          timer = setTimeout(() => {
-            void poll();
-          }, POLL_INTERVAL_MS);
+          scheduleNext();
         }
       } catch (err) {
         if (cancelled) return;
         setPollError(err instanceof Error ? `${err.name}: ${err.message}` : String(err));
-        timer = setTimeout(() => {
-          void poll();
-        }, POLL_INTERVAL_MS);
+        scheduleNext();
       }
     }
 

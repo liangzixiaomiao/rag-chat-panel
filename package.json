@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
+    "@huggingface/transformers": "^4.3.2",
     "@supabase/supabase-js": "^2.119.0",
     "ai": "^7.0.170",
     "better-sqlite3": "^13.1.1",

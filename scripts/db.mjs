@@ -53,6 +53,12 @@ create virtual table if not exists vec_chunks using vec0(
   document_id text partition key
 );
 
+create table if not exists usage (
+  date   text primary key,
+  calls  integer not null default 0,
+  tokens integer not null default 0
+);
+
 create trigger if not exists chunks_after_delete
 after delete on chunks
 begin

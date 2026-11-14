@@ -6,7 +6,13 @@ export const instant = false;
 
 export default function DocumentPage() {
   return (
-    <Suspense fallback={<main style={{ padding: 16, fontFamily: 'monospace' }}>加载文档…</main>}>
+    <Suspense
+      fallback={
+        <main className="flex h-dvh items-center justify-center bg-gray-50 text-sm text-gray-400">
+          加载文档…
+        </main>
+      }
+    >
       <DocumentPageClient />
     </Suspense>
   );

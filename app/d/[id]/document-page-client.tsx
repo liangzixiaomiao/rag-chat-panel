@@ -21,6 +21,12 @@ function statusText(doc: DocumentInfo): string {
   return '入库中';
 }
 
+function statusTone(doc: DocumentInfo): string {
+  if (doc.status === 'ready') return 'bg-emerald-500';
+  if (doc.status === 'failed') return 'bg-red-500';
+  return 'bg-amber-500';
+}
+
 export default function DocumentPageClient() {
   const params = useParams<{ id: string }>();
   const documentId = typeof params.id === 'string' ? params.id : '';
@@ -67,44 +73,61 @@ export default function DocumentPageClient() {
         : `文档状态为 ${doc.status}（${statusText(doc)}），暂不可提问`;
 
   return (
-    <main style={{ padding: 16, maxWidth: 860, fontFamily: 'monospace', fontSize: 14, lineHeight: 1.6 }}>
-      <ScopeSwitcher scope="current" documentId={documentId === '' ? null : documentId} />
+    <main className="flex h-dvh flex-col overflow-hidden bg-gray-50 text-gray-900">
+      <header className="z-10 shrink-0 border-b border-gray-200/60 bg-white/80 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
+          <div className="min-w-0 flex-1">
+            {loading && <p className="text-sm text-gray-400">加载文档…</p>}
 
-      <header style={{ borderBottom: '1px solid #ddd', paddingBottom: 8, marginBottom: 12 }}>
-        {loading && <p style={{ margin: 0 }}>加载文档…</p>}
+            {!loading && error !== '' && (
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="min-w-0 break-words text-sm text-red-600">{error}</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    void load();
+                  }}
+                  className="shrink-0 rounded-lg bg-gray-900 px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-gray-700"
+                >
+                  重试
+                </button>
+              </div>
+            )}
 
-        {!loading && error !== '' && (
-          <div>
-            <p style={{ margin: 0, color: 'crimson', whiteSpace: 'pre-wrap' }}>{error}</p>
-            <button
-              type="button"
-              style={{ marginTop: 8 }}
-              onClick={() => {
-                void load();
-              }}
-            >
-              重试
-            </button>
+            {!loading && error === '' && doc !== null && (
+              <>
+                <h1 className="truncate text-sm font-semibold text-gray-900 sm:text-base" title={doc.title}>
+                  {doc.title}
+                </h1>
+                <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-gray-500">
+                  <span className={`size-1.5 shrink-0 rounded-full ${statusTone(doc)}`} />
+                  <span className="truncate" title={statusText(doc)}>
+                    {statusText(doc)}
+                  </span>
+                </p>
+              </>
+            )}
           </div>
-        )}
 
-        {!loading && error === '' && doc !== null && (
-          <>
-            <h1 style={{ fontSize: 16, margin: 0 }}>{doc.title}</h1>
-            <p style={{ margin: '4px 0 0', color: doc.status === 'ready' ? '#2a7' : '#a60' }}>{statusText(doc)}</p>
-          </>
-        )}
+          <ScopeSwitcher scope="current" documentId={documentId === '' ? null : documentId} />
+        </div>
       </header>
 
-      {doc !== null && (
-        <ChatPanel
-          documentId={documentId === '' ? null : documentId}
-          scope="current"
-          canAsk={canAsk}
-          disabledReason={disabledReason}
-          onCitationOpen={setCitation}
-        />
-      )}
+      <div className="min-h-0 flex-1">
+        {doc !== null ? (
+          <ChatPanel
+            documentId={documentId === '' ? null : documentId}
+            scope="current"
+            canAsk={canAsk}
+            disabledReason={disabledReason}
+            onCitationOpen={setCitation}
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-sm text-gray-400">
+            {error !== '' && '文档不可用'}
+          </div>
+        )}
+      </div>
 
       <CitationDrawer citation={citation} onClose={() => setCitation(null)} />
     </main>

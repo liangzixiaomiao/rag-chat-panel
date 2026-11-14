@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { CSSProperties } from 'react';
 
 const LAST_DOC_KEY = 'self-rag:last-document-id';
 
@@ -14,16 +13,11 @@ interface ScopeSwitcherProps {
   documentId: string | null;
 }
 
-function tabStyle(active: boolean, disabled = false): CSSProperties {
-  return {
-    border: '1px solid #888',
-    borderRadius: 4,
-    background: active ? '#333' : '#f5f5f5',
-    color: active ? '#fff' : '#333',
-    padding: '2px 10px',
-    cursor: disabled ? 'not-allowed' : 'pointer',
-    opacity: disabled ? 0.45 : 1,
-  };
+function tabClass(active: boolean, disabled = false): string {
+  const base = 'rounded-full px-3 py-1 text-xs font-medium transition-colors';
+  if (disabled) return `${base} cursor-not-allowed text-gray-300`;
+  if (active) return `${base} bg-white text-gray-900 shadow-sm`;
+  return `${base} text-gray-500 hover:text-gray-800`;
 }
 
 export default function ScopeSwitcher({ scope, documentId }: ScopeSwitcherProps) {
@@ -56,13 +50,12 @@ export default function ScopeSwitcher({ scope, documentId }: ScopeSwitcherProps)
     <div
       role="group"
       aria-label="检索范围"
-      style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}
+      className="inline-flex shrink-0 items-center rounded-full bg-gray-100 p-0.5"
     >
-      <span style={{ color: '#666', fontSize: 12 }}>范围：</span>
       <button
         type="button"
         aria-pressed={scope === 'current'}
-        style={tabStyle(scope === 'current', scope !== 'current' && lastDocumentId === null)}
+        className={tabClass(scope === 'current', scope !== 'current' && lastDocumentId === null)}
         onClick={() => switchTo('current')}
       >
         这篇文档
@@ -70,7 +63,7 @@ export default function ScopeSwitcher({ scope, documentId }: ScopeSwitcherProps)
       <button
         type="button"
         aria-pressed={scope === 'all'}
-        style={tabStyle(scope === 'all')}
+        className={tabClass(scope === 'all')}
         onClick={() => switchTo('all')}
       >
         全部文档

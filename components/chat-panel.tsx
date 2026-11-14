@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent, ReactNode } from 'react';
+import { ArrowUp } from 'lucide-react';
 import SlashCommands from '@/components/slash-commands';
 import { COMMANDS, buildAskMessage, parseCompareArgs, parseSlashInput } from '@/lib/commands';
 import type { CommandName } from '@/lib/commands';
@@ -11,6 +12,10 @@ import type { CitationDetail } from '@/lib/chat-stream';
 const FIRST_TOKEN_TIMEOUT_MS = 30000;
 const MAX_HISTORY = 4;
 const FALLBACK_ERROR = '这次没答上来，可以重试';
+/** 输入框自动撑高的上限，超过后内部滚动 */
+const TEXTAREA_MAX_HEIGHT = 176;
+/** 距底部小于该值时认为用户仍贴着底部，可以继续自动滚动 */
+const STICK_BOTTOM_THRESHOLD = 96;
 
 interface UiMessage {
   id: string;
@@ -29,27 +34,6 @@ interface ChatPanelProps {
   onCitationOpen: (citation: CitationDetail) => void;
 }
 
-const badgeStyle = {
-  border: '1px solid #888',
-  borderRadius: 3,
-  background: '#f3f3f3',
-  padding: '0 3px',
-  margin: '0 1px',
-  cursor: 'pointer',
-  fontSize: 12,
-} as const;
-
-const citationListStyle = { display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6 } as const;
-const citationItemStyle = {
-  border: '1px solid #bbb',
-  borderRadius: 3,
-  background: '#fafafa',
-  padding: '1px 6px',
-  cursor: 'pointer',
-  fontSize: 12,
-  color: '#333',
-} as const;
-
 interface CommandPayload {
   command: CommandName;
   commandArgs: string[];
@@ -63,6 +47,9 @@ export default function ChatPanel({ documentId, scope, canAsk, disabledReason, o
   const [busy, setBusy] = useState(false);
   const [hint, setHint] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  // 用户手动往上翻时暂停自动滚动，回到底部后恢复
+  const stickToBottomRef = useRef(true);
   // 选中原文后焦点会切到输入框，这里持续记住最后一次非空选区，供 /explain 使用
   const selectedTextRef = useRef('');
 
@@ -74,6 +61,27 @@ export default function ChatPanel({ documentId, scope, canAsk, disabledReason, o
     document.addEventListener('selectionchange', handleSelectionChange);
     return () => document.removeEventListener('selectionchange', handleSelectionChange);
   }, []);
+
+  // 新消息或流式增量都会改变 messages，贴着底部时平滑跟进
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el === null || !stickToBottomRef.current) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+  }, [messages]);
+
+  // 输入框随内容自动撑高，内容清空后回到单行
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (el === null) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, TEXTAREA_MAX_HEIGHT)}px`;
+  }, [input]);
+
+  function handleScroll(): void {
+    const el = scrollRef.current;
+    if (el === null) return;
+    stickToBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < STICK_BOTTOM_THRESHOLD;
+  }
 
   function patchMessage(id: string, patch: Partial<UiMessage>): void {
     setMessages((prev) => prev.map((message) => (message.id === id ? { ...message, ...patch } : message)));
@@ -159,6 +167,7 @@ export default function ChatPanel({ documentId, scope, canAsk, disabledReason, o
     setInput('');
     setHint('');
     setBusy(true);
+    stickToBottomRef.current = true;
 
     const request =
       payload === null
@@ -240,8 +249,13 @@ export default function ChatPanel({ documentId, scope, canAsk, disabledReason, o
 
       nodes.push(
         citation ? (
-          <button key={key} type="button" style={badgeStyle} onClick={() => onCitationOpen(citation)}>
-            [{refId}]
+          <button
+            key={key}
+            type="button"
+            onClick={() => onCitationOpen(citation)}
+            className="mx-0.5 inline-flex h-[18px] min-w-[18px] translate-y-[-1px] items-center justify-center rounded-md bg-blue-50 px-1 align-baseline text-[11px] font-medium text-blue-700 transition-colors hover:bg-blue-100"
+          >
+            {refId}
           </button>
         ) : (
           <span key={key}>[{refId}]</span>
@@ -263,87 +277,153 @@ export default function ChatPanel({ documentId, scope, canAsk, disabledReason, o
     return '';
   }
 
+  function renderAssistantAvatar(): ReactNode {
+    return (
+      <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-gray-900 text-[10px] font-semibold tracking-wide text-white">
+        AI
+      </div>
+    );
+  }
+
   return (
-    <section style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <div style={{ minHeight: 200 }}>
-        {messages.length === 0 ? (
-          <p style={{ color: '#666' }}>
-            {scope === 'all' ? '在所有已入库文档里问点什么' : '在这篇文档里问点什么'}（输入 / 可调用指令）
-          </p>
-        ) : (
-          messages.map((message, index) => (
-            <div key={message.id} style={{ marginBottom: 12 }}>
-              <div style={{ color: '#888', fontSize: 12 }}>{message.role === 'user' ? '你' : '助手'}</div>
-              <div style={{ whiteSpace: 'pre-wrap' }}>
-                {message.content === '' && message.pending ? '…' : renderContent(message)}
+    <section className="flex h-full min-h-0 flex-col">
+      <div ref={scrollRef} onScroll={handleScroll} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+        <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col px-4 py-6 sm:px-6">
+          {messages.length === 0 ? (
+            <div className="flex flex-1 flex-col items-center justify-center gap-2 py-16 text-center">
+              <div className="flex size-11 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">
+                AI
               </div>
-              {/* 全库检索时正文不写文件名，出处统一在回答下方回填标题，保证每条引用能看出是哪本书 */}
-              {message.role === 'assistant' && message.citations.length > 0 && (
-                <div style={citationListStyle}>
-                  {message.citations.map((citation) => (
-                    <button
-                      key={`${message.id}-cite-${citation.refId}`}
-                      type="button"
-                      style={citationItemStyle}
-                      title={`p${citation.pageFrom}-${citation.pageTo ?? '?'}`}
-                      onClick={() => onCitationOpen(citation)}
-                    >
-                      [{citation.refId}] {citation.documentTitle}
-                    </button>
-                  ))}
-                </div>
-              )}
-              {message.error !== null && (
-                <div style={{ color: 'crimson', marginTop: 4 }}>
-                  {message.error}
-                  <button
-                    type="button"
-                    style={{ marginLeft: 8 }}
-                    onClick={() => void send(previousQuestion(index))}
-                    disabled={busy}
-                  >
-                    重试
-                  </button>
-                </div>
-              )}
+              <p className="mt-2 text-base font-medium text-gray-800">开始新的对话</p>
+              <p className="max-w-xs text-sm leading-relaxed text-gray-400">
+                {scope === 'all'
+                  ? '在所有已入库文档里提问，回答会标注出处。'
+                  : '在这篇文档里提问，回答会标注引用页码。'}
+              </p>
+              <p className="mt-1 text-xs text-gray-400">输入 / 可调用指令</p>
             </div>
-          ))
-        )}
+          ) : (
+            <div className="flex flex-col gap-7">
+              {messages.map((message, index) => (
+                <div key={message.id}>
+                  {message.role === 'user' ? (
+                    <div className="flex justify-end">
+                      <div className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-blue-50 px-4 py-2.5 text-[15px] leading-relaxed text-gray-900 sm:max-w-[75%]">
+                        {message.content}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-start gap-3">
+                      {renderAssistantAvatar()}
+                      <div className="min-w-0 flex-1 pt-0.5">
+                        <div className="whitespace-pre-wrap text-[15px] leading-relaxed text-gray-800">
+                          {message.content === '' && message.pending ? (
+                            <span className="inline-flex items-center gap-1 py-1">
+                              <span className="size-1.5 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.2s]" />
+                              <span className="size-1.5 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.1s]" />
+                              <span className="size-1.5 animate-bounce rounded-full bg-gray-400" />
+                            </span>
+                          ) : (
+                            renderContent(message)
+                          )}
+                          {message.content !== '' && message.pending && (
+                            <span
+                              aria-hidden="true"
+                              className="ml-0.5 inline-block h-4 w-[2px] translate-y-[2px] animate-pulse rounded-full bg-gray-800"
+                            />
+                          )}
+                        </div>
+
+                        {/* 全库检索时正文不写文件名，出处统一在回答下方回填标题，保证每条引用能看出是哪本书 */}
+                        {message.citations.length > 0 && (
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {message.citations.map((citation) => (
+                              <button
+                                key={`${message.id}-cite-${citation.refId}`}
+                                type="button"
+                                title={`p${citation.pageFrom}-${citation.pageTo ?? '?'}`}
+                                onClick={() => onCitationOpen(citation)}
+                                className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50"
+                              >
+                                <span className="font-medium text-gray-800">{citation.refId}</span>
+                                <span className="max-w-[200px] truncate">{citation.documentTitle}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        {message.error !== null && (
+                          <div className="mt-3 flex flex-wrap items-center gap-3 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
+                            <span className="min-w-0 flex-1 break-words">{message.error}</span>
+                            <button
+                              type="button"
+                              className="shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 disabled:opacity-50"
+                              onClick={() => void send(previousQuestion(index))}
+                              disabled={busy}
+                            >
+                              重试
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      {input.trim() === '/' && (
-        <SlashCommands
-          commands={COMMANDS}
-          onPick={(command) => {
-            setInput(`/${command.name} `);
-            setHint('');
-            textareaRef.current?.focus();
-          }}
-        />
-      )}
+      <div className="shrink-0 border-t border-gray-200/60 bg-white/80 backdrop-blur">
+        <div className="mx-auto w-full max-w-3xl px-3 pb-3 pt-3 sm:px-6">
+          {input.trim() === '/' && (
+            <div className="mb-2 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg shadow-gray-900/5">
+              <SlashCommands
+                commands={COMMANDS}
+                onPick={(command) => {
+                  setInput(`/${command.name} `);
+                  setHint('');
+                  textareaRef.current?.focus();
+                }}
+              />
+            </div>
+          )}
 
-      {hint !== '' && <div style={{ color: '#a60', fontSize: 12 }}>{hint}</div>}
+          {hint !== '' && <div className="mb-2 px-2 text-xs text-amber-600">{hint}</div>}
 
-      <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
-        <textarea
-          ref={textareaRef}
-          value={input}
-          onChange={(event) => {
-            setInput(event.target.value);
-            setHint('');
-          }}
-          onKeyDown={handleKeyDown}
-          rows={3}
-          disabled={!canAsk || busy}
-          placeholder={canAsk ? 'Enter 发送，Shift+Enter 换行；输入 / 调用指令' : disabledReason}
-          style={{ flex: 1, padding: 6, cursor: busy ? 'progress' : 'text' }}
-        />
-        <button type="submit" onClick={() => void send(input)} disabled={!canAsk || busy}>
-          {busy ? '生成中…' : '发送'}
-        </button>
+          <div className="flex items-end gap-2 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg shadow-gray-900/5 transition-colors focus-within:border-gray-300">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(event) => {
+                setInput(event.target.value);
+                setHint('');
+              }}
+              onKeyDown={handleKeyDown}
+              rows={1}
+              disabled={!canAsk || busy}
+              placeholder={canAsk ? '问点什么…（Enter 发送，Shift+Enter 换行）' : disabledReason}
+              className="max-h-44 min-h-[36px] w-full flex-1 resize-none bg-transparent px-2 py-2 text-[15px] leading-6 text-gray-900 outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-60"
+            />
+            <button
+              type="button"
+              aria-label="发送"
+              onClick={() => void send(input)}
+              disabled={!canAsk || busy || input.trim() === ''}
+              className="mb-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl bg-gray-900 text-white transition-all hover:bg-gray-700 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+            >
+              <ArrowUp className="size-4" strokeWidth={2.5} />
+            </button>
+          </div>
+
+          <p className="mt-2 hidden text-center text-xs text-gray-400 sm:block">
+            Enter 发送 · Shift + Enter 换行 · 输入 / 调用指令
+          </p>
+
+          {!canAsk && <div className="mt-2 px-2 text-xs text-amber-600">{disabledReason}</div>}
+        </div>
       </div>
-
-      {!canAsk && <div style={{ color: '#a60', fontSize: 12 }}>{disabledReason}</div>}
     </section>
   );
 }

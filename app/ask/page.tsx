@@ -10,15 +10,20 @@ export default function AskPage() {
   const [citation, setCitation] = useState<CitationDetail | null>(null);
 
   return (
-    <main style={{ padding: 16, maxWidth: 860, fontFamily: 'monospace', fontSize: 14, lineHeight: 1.6 }}>
-      <ScopeSwitcher scope="all" documentId={null} />
-
-      <header style={{ borderBottom: '1px solid #ddd', paddingBottom: 8, marginBottom: 12 }}>
-        <h1 style={{ fontSize: 16, margin: 0 }}>全部文档</h1>
-        <p style={{ margin: '4px 0 0', color: '#2a7' }}>跨全部已入库文档检索</p>
+    <main className="flex h-dvh flex-col overflow-hidden bg-gray-50 text-gray-900">
+      <header className="z-10 shrink-0 border-b border-gray-200/60 bg-white/80 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate text-sm font-semibold text-gray-900 sm:text-base">全部文档</h1>
+            <p className="mt-0.5 truncate text-xs text-gray-500">跨全部已入库文档检索</p>
+          </div>
+          <ScopeSwitcher scope="all" documentId={null} />
+        </div>
       </header>
 
-      <ChatPanel documentId={null} scope="all" canAsk disabledReason="" onCitationOpen={setCitation} />
+      <div className="min-h-0 flex-1">
+        <ChatPanel documentId={null} scope="all" canAsk disabledReason="" onCitationOpen={setCitation} />
+      </div>
 
       <CitationDrawer citation={citation} onClose={() => setCitation(null)} />
     </main>

@@ -14,6 +14,8 @@ export interface RetrieveParams {
   question: string;
   /** null 表示全库检索；有值时只在该文档内检索 */
   documentId: string | null;
+  /** 指定多篇文档检索；非空时优先于 documentId，也优先于全库 */
+  documentIds?: string[] | null;
   topK?: number;
   maxParents?: number;
 }
@@ -70,15 +72,19 @@ function elapsedMs(startedAt: number): number {
 /**
  * 检索：子块命中 → 过滤阈值 → 按父块聚合。
  * documentId 为 null 时全库检索，父块聚合键带上 documentId，避免不同文档的 parentIndex 串在一起。
+ * documentIds 非空时只在这些文档里检索：逐篇做 KNN 再合并，避免 vec0 的 IN 过滤问题。
  * hits 保留全部命中子块（前端按 parentIndex 高亮），parents 是每个父块相似度最高的代表。
  */
 export async function retrieve(params: RetrieveParams): Promise<RetrieveResult> {
   const { question, documentId } = params;
+  const documentIds = [...new Set((params.documentIds ?? []).filter((id) => id !== ''))];
   const topK = params.topK ?? DEFAULT_TOP_K;
   const maxParents = params.maxParents ?? DEFAULT_MAX_PARENTS;
-  const allScope = documentId === null;
-  // 全库时多取候选，后面再按文档保底，单文档检索保持原有 topK 不变
-  const candidateK = allScope ? topK * ALL_SCOPE_CANDIDATE_FACTOR : topK;
+  const selectedScope = documentIds.length > 0;
+  const allScope = documentId === null && !selectedScope;
+  // 全库 / 多选时多取候选，后面再按文档保底，单文档检索保持原有 topK 不变
+  const crossScope = allScope || selectedScope;
+  const candidateK = crossScope ? topK * ALL_SCOPE_CANDIDATE_FACTOR : topK;
 
   const embedStartedAt = performance.now();
   const [queryVector] = await embedTexts([question]);
@@ -86,9 +92,17 @@ export async function retrieve(params: RetrieveParams): Promise<RetrieveResult> 
 
   const searchStartedAt = performance.now();
   const db = serverClient();
-  const rows = allScope
-    ? (db.prepare(knnSql(false)).all(new Float32Array(queryVector), candidateK) as KnnRow[])
-    : (db.prepare(knnSql(true)).all(new Float32Array(queryVector), topK, documentId) as KnnRow[]);
+  let rows: KnnRow[];
+  if (selectedScope) {
+    const vector = new Float32Array(queryVector);
+    const statement = db.prepare(knnSql(true));
+    rows = documentIds.flatMap((id) => statement.all(vector, candidateK, id) as KnnRow[]);
+    rows.sort((a, b) => a.distance - b.distance);
+  } else if (allScope) {
+    rows = db.prepare(knnSql(false)).all(new Float32Array(queryVector), candidateK) as KnnRow[];
+  } else {
+    rows = db.prepare(knnSql(true)).all(new Float32Array(queryVector), topK, documentId) as KnnRow[];
+  }
   const searchMs = elapsedMs(searchStartedAt);
 
   const hits: Retrieved[] = rows
@@ -116,7 +130,7 @@ export async function retrieve(params: RetrieveParams): Promise<RetrieveResult> 
   }
 
   const ranked = [...byParent.values()].sort((a, b) => b.similarity - a.similarity);
-  const parents = allScope ? pickCrossDocument(ranked, maxParents) : ranked.slice(0, maxParents);
+  const parents = crossScope ? pickCrossDocument(ranked, maxParents) : ranked.slice(0, maxParents);
 
   return { hits: hits.slice(0, topK), parents, timings: { embedMs, searchMs } };
 }
@@ -173,11 +187,20 @@ function escapeLike(value: string): string {
 
 export interface ListParentsParams {
   documentId: string | null;
+  /** 指定多篇文档；非空时优先于 documentId */
+  documentIds?: string[] | null;
   limit: number;
 }
 
 /** 按父块顺序列出结构（/outline 用）：不做向量检索，保证整篇文档的 headingPath 都能拿到。 */
 export function listParents(params: ListParentsParams): Retrieved[] {
+  const ids = [...new Set((params.documentIds ?? []).filter((id) => id !== ''))];
+  const scopedByIds = ids.length > 0;
+  const filter = scopedByIds
+    ? `c.document_id in (${ids.map(() => '?').join(', ')})`
+    : '(? is null or c.document_id = ?)';
+  const args = scopedByIds ? [...ids, params.limit] : [params.documentId, params.documentId, params.limit];
+
   const rows = serverClient()
     .prepare(
       `select c.id            as chunkId,
@@ -191,12 +214,12 @@ export function listParents(params: ListParentsParams): Retrieved[] {
               c.parent_index  as parentIndex
        from chunks c
        join documents d on d.id = c.document_id
-       where (? is null or c.document_id = ?)
+       where ${filter}
          and c.id in (select min(id) from chunks group by document_id, parent_index)
        order by d.created_at asc, c.document_id asc, c.parent_index asc
        limit ?`
     )
-    .all(params.documentId, params.documentId, params.limit) as ParentRow[];
+    .all(...args) as ParentRow[];
 
   return rows.map(toRetrieved);
 }
@@ -204,6 +227,8 @@ export function listParents(params: ListParentsParams): Retrieved[] {
 export interface CompareRetrieveParams {
   scope: 'current' | 'all';
   documentId: string | null;
+  /** 限定只在这些文档里解析对比对象；为空时不限制 */
+  restrictTo?: string[] | null;
   targets: [string, string];
   topK: number;
   maxParentsPerSide: number;
@@ -213,15 +238,23 @@ export type CompareRetrieveResult =
   | { ok: true; sides: [CompareSide, CompareSide] }
   | { ok: false; message: string };
 
-function findDocumentRows(target: string): DocumentRow[] {
+function findDocumentRows(target: string, restrictTo: string[] | null): DocumentRow[] {
+  const ids = [...new Set((restrictTo ?? []).filter((id) => id !== ''))];
+  const restricted = ids.length > 0;
+  const filter = restricted ? `and id in (${ids.map(() => '?').join(', ')})` : '';
+  const args = restricted
+    ? [target, `%${escapeLike(target)}%`, target, target, ...ids]
+    : [target, `%${escapeLike(target)}%`, target, target];
+
   return serverClient()
     .prepare(
       `select id, title from documents
-       where id = ? or title like ? escape '\\'
+       where (id = ? or title like ? escape '\\')
+         ${filter}
        order by case when id = ? then 0 when title = ? then 1 else 2 end
        limit 5`
     )
-    .all(target, `%${escapeLike(target)}%`, target, target) as DocumentRow[];
+    .all(...args) as DocumentRow[];
 }
 
 function pickDocument(rows: DocumentRow[], target: string): DocumentRow | null {
@@ -280,7 +313,7 @@ function parentsByHeadings(documentId: string, headings: string[], limit: number
  * 全部文档：两个参数按文档标题解析，各自在文档内取核心内容。
  */
 export async function retrieveCompare(params: CompareRetrieveParams): Promise<CompareRetrieveResult> {
-  const { scope, documentId, targets, topK, maxParentsPerSide } = params;
+  const { scope, documentId, restrictTo, targets, topK, maxParentsPerSide } = params;
 
   if (scope === 'current') {
     if (documentId === null) {
@@ -308,7 +341,7 @@ export async function retrieveCompare(params: CompareRetrieveParams): Promise<Co
     return { ok: true, sides: [sides[0], sides[1]] };
   }
 
-  const resolved = targets.map((target) => pickDocument(findDocumentRows(target), target));
+  const resolved = targets.map((target) => pickDocument(findDocumentRows(target, restrictTo ?? null), target));
   const missingIndex = resolved.findIndex((doc) => doc === null);
   if (missingIndex !== -1) {
     return { ok: false, message: `没有找到文档「${targets[missingIndex]}」，请写清两份文档的标题。` };

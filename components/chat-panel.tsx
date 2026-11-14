@@ -28,7 +28,9 @@ interface UiMessage {
 
 interface ChatPanelProps {
   documentId: string | null;
-  scope: 'current' | 'all';
+  scope: 'current' | 'all' | 'selected';
+  /** scope=selected 时使用：只在这些文档里检索 */
+  documentIds?: string[] | null;
   canAsk: boolean;
   disabledReason: string;
   onCitationOpen: (citation: CitationDetail) => void;
@@ -41,7 +43,14 @@ interface CommandPayload {
   question: string;
 }
 
-export default function ChatPanel({ documentId, scope, canAsk, disabledReason, onCitationOpen }: ChatPanelProps) {
+export default function ChatPanel({
+  documentId,
+  scope,
+  documentIds = null,
+  canAsk,
+  disabledReason,
+  onCitationOpen,
+}: ChatPanelProps) {
   const [messages, setMessages] = useState<UiMessage[]>([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -99,10 +108,13 @@ export default function ChatPanel({ documentId, scope, canAsk, disabledReason, o
   }
 
   function prepareCommand(command: CommandName, args: string, rawInput: string): CommandPayload | null {
+    // 多选范围在指令提示语里按“跨文档”处理
+    const promptScope = scope === 'current' ? 'current' : 'all';
+
     if (command === 'explain') {
       const text = args !== '' ? args : selectedTextRef.current;
       if (text === '') {
-        askOnce(rawInput, buildAskMessage('explain', scope));
+        askOnce(rawInput, buildAskMessage('explain', promptScope));
         return null;
       }
       return { command, commandArgs: [], selectedText: text, question: text };
@@ -111,7 +123,7 @@ export default function ChatPanel({ documentId, scope, canAsk, disabledReason, o
     if (command === 'compare') {
       const targets = parseCompareArgs(args);
       if (targets === null) {
-        askOnce(rawInput, buildAskMessage('compare', scope));
+        askOnce(rawInput, buildAskMessage('compare', promptScope));
         return null;
       }
       return { command, commandArgs: targets, selectedText: '', question: args };
@@ -171,11 +183,12 @@ export default function ChatPanel({ documentId, scope, canAsk, disabledReason, o
 
     const request =
       payload === null
-        ? { question, scope, documentId: documentId ?? undefined, history }
+        ? { question, scope, documentId: documentId ?? undefined, documentIds: documentIds ?? undefined, history }
         : {
             question,
             scope,
             documentId: documentId ?? undefined,
+            documentIds: documentIds ?? undefined,
             command: payload.command,
             commandArgs: payload.commandArgs,
             selectedText: payload.selectedText,
@@ -296,9 +309,11 @@ export default function ChatPanel({ documentId, scope, canAsk, disabledReason, o
               </div>
               <p className="mt-2 text-base font-medium text-gray-800">开始新的对话</p>
               <p className="max-w-xs text-sm leading-relaxed text-gray-400">
-                {scope === 'all'
-                  ? '在所有已入库文档里提问，回答会标注出处。'
-                  : '在这篇文档里提问，回答会标注引用页码。'}
+                {scope === 'selected'
+                  ? '在你选中的文档里提问，回答会标注出处。'
+                  : scope === 'all'
+                    ? '在所有已入库文档里提问，回答会标注出处。'
+                    : '在这篇文档里提问，回答会标注引用页码。'}
               </p>
               <p className="mt-1 text-xs text-gray-400">输入 / 可调用指令</p>
             </div>
@@ -337,7 +352,9 @@ export default function ChatPanel({ documentId, scope, canAsk, disabledReason, o
                         {/* 全库检索时正文不写文件名，出处统一在回答下方回填标题，保证每条引用能看出是哪本书 */}
                         {message.citations.length > 0 && (
                           <div className="mt-3 flex flex-wrap gap-2">
-                            {message.citations.map((citation) => (
+                            {Array.from(
+                              new Map(message.citations.map((item) => [item.refId, item])).values()
+                            ).map((citation) => (
                               <button
                                 key={`${message.id}-cite-${citation.refId}`}
                                 type="button"

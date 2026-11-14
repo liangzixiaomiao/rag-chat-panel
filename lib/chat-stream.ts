@@ -4,9 +4,11 @@ import type { Citation } from '@/lib/types';
 
 export interface ChatStreamRequest {
   question: string;
-  /** 不传按 current 处理；all 时 documentId 可省略 */
-  scope?: 'current' | 'all';
+  /** 不传按 current 处理；all 时 documentId 可省略；selected 时 documentIds 必填 */
+  scope?: 'current' | 'all' | 'selected';
   documentId?: string;
+  /** scope=selected 时使用：只在这些文档里检索 */
+  documentIds?: string[];
   /** 斜杠指令；不传就是普通问答 */
   command?: CommandName;
   commandArgs?: string[];

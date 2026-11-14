@@ -175,16 +175,18 @@ export async function POST(request: Request): Promise<Response> {
     question?: unknown;
     scope?: unknown;
     documentId?: unknown;
+    documentIds?: unknown;
     history?: unknown;
     command?: unknown;
     commandArgs?: unknown;
     selectedText?: unknown;
   };
 
-  const scope = record.scope === undefined ? 'current' : record.scope;
-  if (scope !== 'current' && scope !== 'all') {
-    return NextResponse.json({ error: "scope 只能是 'current' 或 'all'" }, { status: 400 });
+  const rawScope: unknown = record.scope === undefined ? 'current' : record.scope;
+  if (rawScope !== 'current' && rawScope !== 'all' && rawScope !== 'selected') {
+    return NextResponse.json({ error: "scope 只能是 'current'、'all' 或 'selected'" }, { status: 400 });
   }
+  const scope: 'current' | 'all' | 'selected' = rawScope;
   if (typeof record.question !== 'string' || record.question.trim() === '') {
     return NextResponse.json({ error: '缺少 question' }, { status: 400 });
   }
@@ -204,13 +206,28 @@ export async function POST(request: Request): Promise<Response> {
     : [];
   const selectedText = typeof record.selectedText === 'string' ? record.selectedText.trim() : '';
 
-  // scope=all 时忽略 documentId；scope=current（含未传 scope）时 documentId 必填，不做静默全库
+  // scope=all 时忽略 documentId；scope=current（含未传 scope）时 documentId 必填；scope=selected 时 documentIds 必填
   let documentId: string | null = null;
+  let documentIds: string[] = [];
   if (scope === 'current') {
     if (typeof record.documentId !== 'string' || record.documentId.trim() === '') {
       return NextResponse.json({ error: 'scope=current 时必须提供 documentId' }, { status: 400 });
     }
     documentId = record.documentId;
+  } else if (scope === 'selected') {
+    if (!Array.isArray(record.documentIds) || record.documentIds.length === 0) {
+      return NextResponse.json({ error: 'scope=selected 时必须提供 documentIds' }, { status: 400 });
+    }
+    const ids = record.documentIds
+      .filter((item): item is string => typeof item === 'string' && item.trim() !== '')
+      .map((item) => item.trim());
+    if (ids.length === 0) {
+      return NextResponse.json({ error: 'scope=selected 时必须提供 documentIds' }, { status: 400 });
+    }
+    if (ids.length > 20) {
+      return NextResponse.json({ error: '一次最多选择 20 篇文档' }, { status: 400 });
+    }
+    documentIds = [...new Set(ids)];
   }
 
   const question = record.question;
@@ -250,8 +267,9 @@ export async function POST(request: Request): Promise<Response> {
 
       const params = COMMAND_RETRIEVAL.compare;
       const compare = await retrieveCompare({
-        scope,
+        scope: scope === 'current' ? 'current' : 'all',
         documentId,
+        restrictTo: scope === 'selected' ? documentIds : null,
         targets: [commandArgs[0], commandArgs[1]],
         topK: params.topK,
         maxParentsPerSide: params.maxParents,
@@ -271,13 +289,14 @@ export async function POST(request: Request): Promise<Response> {
       const params = COMMAND_RETRIEVAL[command];
       if (command === 'outline') {
         // 大纲要看整篇结构，按父块顺序取，不做语义检索
-        parents = listParents({ documentId, limit: params.maxParents });
+        parents = listParents({ documentId, documentIds, limit: params.maxParents });
       } else {
         const searchQuestion = commandArgs.length > 0 ? commandArgs.join(' ') : COMMAND_DEFAULT_QUERY.summarize;
         parents = (
           await retrieve({
             question: searchQuestion,
             documentId,
+            documentIds,
             topK: params.topK,
             maxParents: params.maxParents,
           })
@@ -295,7 +314,7 @@ export async function POST(request: Request): Promise<Response> {
       // 检索用改写后的问题，生成用原问题
       const rewrite = await rewriteQuery({ question, history });
       const searchQuery = rewrite.query === '' ? question : rewrite.query;
-      parents = (await retrieve({ question: searchQuery, documentId, topK: 20, maxParents: 8 })).parents;
+      parents = (await retrieve({ question: searchQuery, documentId, documentIds, topK: 20, maxParents: 8 })).parents;
       messages = buildMessages({ question, parents, history });
     }
   } catch (err) {
